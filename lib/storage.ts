@@ -1,9 +1,12 @@
+import { supabase } from "./supabase";
+
 export interface EventUser {
   name: string;
   email: string;
-  phone: string;
-  company: string;
-  role: string;
+  crmUf: string;
+  crmNumber: string;
+  privacyConsent: boolean;
+  commsConsent: boolean;
   registeredAt: string;
 }
 
@@ -44,15 +47,29 @@ export function getSlidoCode(): string {
   return localStorage.getItem(SLIDO_CODE_KEY) || "";
 }
 
+export async function saveUserToSupabase(
+  user: EventUser
+): Promise<{ error: string | null }> {
+  const { error } = await supabase.from("registrations").insert({
+    name: user.name,
+    email: user.email,
+    crm_uf: user.crmUf,
+    crm_number: user.crmNumber,
+    privacy_consent: user.privacyConsent,
+    comms_consent: user.commsConsent,
+    registered_at: user.registeredAt,
+  });
+  return { error: error ? error.message : null };
+}
+
 export function buildSlidoUrl(
   eventCode: string,
   user: Pick<EventUser, "name" | "email">
 ): string {
   if (!eventCode) return "";
-  const base = `https://app.sli.do/event/${eventCode}/live/questions`;
-  const params = new URLSearchParams();
-  if (user.name) params.set("user_name", user.name);
-  if (user.email) params.set("user_email", user.email);
-  const query = params.toString();
-  return query ? `${base}?${query}` : base;
+  const base = `https://app.sli.do/event/${eventCode}`;
+  let url = base;
+  if (user.name) url += `?user_name=${encodeURIComponent(user.name)}`;
+  if (user.email) url += `&user_email=${encodeURIComponent(user.email)}`;
+  return url;
 }

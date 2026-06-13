@@ -5,9 +5,8 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "TechSummit Brasil 2025",
-  description:
-    "O maior evento de tecnologia e inteligência artificial do Brasil. Inscreva-se gratuitamente.",
+  title: "Fórum DII 2026 · Takeda",
+  description: "Preencha seus dados para participar da sessão interativa do Fórum DII 2026.",
 };
 
 export default function RootLayout({

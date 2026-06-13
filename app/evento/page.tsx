@@ -17,12 +17,11 @@ const SlidoEmbed = dynamic(() => import("@/components/SlidoEmbed"), {
 });
 
 const AGENDA = [
-  { time: "09:00", title: "Abertura e boas-vindas", speaker: "Organização TechSummit", type: "keynote" },
-  { time: "09:30", title: "IA Generativa em produção: lições do Nubank", speaker: "Ana Silva · CTO, Nubank", type: "palestra" },
-  { time: "10:30", title: "Scale de engenharia: de 10 a 500 devs", speaker: "Rafael Moura · VP Eng, iFood", type: "palestra" },
-  { time: "11:30", title: "Coffee break & networking", speaker: "", type: "break" },
-  { time: "14:00", title: "LLMs em apps B2B: casos reais com Totvs", speaker: "Julia Costa · AI Lead, Totvs", type: "palestra" },
-  { time: "15:30", title: "Painel: O futuro do desenvolvimento no Brasil", speaker: "Mesa redonda com 4 CTOs", type: "painel" },
+  { time: "09:00", title: "Abertura e boas-vindas", speaker: "Fórum DII 2026 · Takeda", type: "keynote" },
+  { time: "09:30", title: "Sessão interativa ao vivo", speaker: "", type: "palestra" },
+  { time: "11:30", title: "Intervalo", speaker: "", type: "break" },
+  { time: "14:00", title: "Sessão interativa — tarde", speaker: "", type: "palestra" },
+  { time: "15:30", title: "Encerramento", speaker: "", type: "keynote" },
 ];
 
 const TYPE_STYLES: Record<string, string> = {
@@ -75,11 +74,11 @@ export default function EventoPage() {
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-purple-700 rounded-lg flex items-center justify-center text-sm font-bold flex-shrink-0">
-              TS
+              FD
             </div>
             <div className="hidden sm:block">
-              <p className="text-sm font-semibold leading-none">TechSummit Brasil 2025</p>
-              <p className="text-xs text-white/40 mt-0.5">26–27 Jun · São Paulo, SP</p>
+              <p className="text-sm font-semibold leading-none">Fórum DII 2026</p>
+              <p className="text-xs text-white/40 mt-0.5">Takeda</p>
             </div>
           </div>
 
@@ -90,9 +89,9 @@ export default function EventoPage() {
               </div>
               <div className="hidden sm:block text-sm">
                 <p className="font-medium leading-none">{user.name}</p>
-                {user.company && (
-                  <p className="text-white/40 text-xs mt-0.5">{user.company}</p>
-                )}
+                <p className="text-white/40 text-xs mt-0.5">
+                  CRM {user.crmNumber}/{user.crmUf}
+                </p>
               </div>
               <span className="tag-badge bg-green-500/20 text-green-400 border border-green-500/30 text-xs hidden sm:inline-flex">
                 Credenciado
@@ -119,13 +118,15 @@ export default function EventoPage() {
             <h1 className="text-xl font-bold">
               Bem-vindo(a),{" "}
               <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                {user.name.split(" ")[0]}
+                {user.name
+                  .split(" ")
+                  .slice(0, /^dra?\.?$/i.test(user.name.split(" ")[0]) ? 2 : 1)
+                  .join(" ")}
               </span>
               ! 👋
             </h1>
             <p className="text-sm text-white/50 mt-0.5">
-              {user.role && `${user.role} ${user.company ? `· ${user.company}` : ""} · `}
-              Cadastrado em{" "}
+              CRM {user.crmNumber}/{user.crmUf} · Cadastrado em{" "}
               {new Date(user.registeredAt).toLocaleDateString("pt-BR", {
                 day: "2-digit",
                 month: "long",

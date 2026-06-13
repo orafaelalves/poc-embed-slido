@@ -2,54 +2,40 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { saveUser, getUser } from "@/lib/storage";
+import { saveUser, saveUserToSupabase, getUser } from "@/lib/storage";
 
 interface FormData {
   name: string;
   email: string;
-  phone: string;
-  company: string;
-  role: string;
+  crmUf: string;
+  crmNumber: string;
+  privacyConsent: boolean;
+  commsConsent: boolean;
 }
 
 interface FormErrors {
   name?: string;
   email?: string;
+  crm?: string;
+  privacyConsent?: string;
 }
 
-const SPEAKERS = [
-  { initials: "AS", name: "Ana Silva", title: "CTO · Nubank", color: "from-pink-500 to-rose-600" },
-  { initials: "RM", name: "Rafael Moura", title: "VP Engineering · iFood", color: "from-blue-500 to-cyan-600" },
-  { initials: "JC", name: "Julia Costa", title: "AI Lead · Totvs", color: "from-amber-500 to-orange-600" },
-  { initials: "PL", name: "Pedro Lima", title: "Founder · Creditas", color: "from-emerald-500 to-teal-600" },
+const UFS = [
+  "AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA",
+  "MT", "MS", "MG", "PA", "PB", "PR", "PE", "PI", "RJ", "RN",
+  "RS", "RO", "RR", "SC", "SP", "SE", "TO",
 ];
 
-const FEATURES = [
-  {
-    icon: "🤖",
-    title: "IA na prática",
-    desc: "Casos reais de implementação de LLMs em produtos brasileiros",
-  },
-  {
-    icon: "🚀",
-    title: "Startups & Scale-ups",
-    desc: "Como times de engenharia crescem de 10 para 1000 devs",
-  },
-  {
-    icon: "🔒",
-    title: "Segurança e compliance",
-    desc: "LGPD, privacidade e segurança no desenvolvimento moderno",
-  },
-];
 
 export default function LandingPage() {
   const router = useRouter();
   const [form, setForm] = useState<FormData>({
     name: "",
     email: "",
-    phone: "",
-    company: "",
-    role: "",
+    crmUf: "",
+    crmNumber: "",
+    privacyConsent: false,
+    commsConsent: false,
   });
   const [errors, setErrors] = useState<FormErrors>({});
   const [loading, setLoading] = useState(false);
@@ -62,11 +48,20 @@ export default function LandingPage() {
 
   const validate = (): boolean => {
     const newErrors: FormErrors = {};
-    if (!form.name.trim()) newErrors.name = "Nome é obrigatório";
+    if (!form.name.trim()) newErrors.name = "Por favor, insira seu nome completo";
     if (!form.email.trim()) {
       newErrors.email = "E-mail é obrigatório";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
-      newErrors.email = "E-mail inválido";
+      newErrors.email = "Insira um e-mail válido";
+    }
+    if (!form.crmUf || !form.crmNumber.trim()) {
+      newErrors.crm = "Selecione a UF e insira o número do CRM";
+    } else if (!/^\d{4,7}$/.test(form.crmNumber.trim())) {
+      newErrors.crm = "Número de CRM inválido";
+    }
+    if (!form.privacyConsent) {
+      newErrors.privacyConsent =
+        "Você deve aceitar a Política de Privacidade para continuar";
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -76,131 +71,111 @@ export default function LandingPage() {
     e.preventDefault();
     if (!validate()) return;
     setLoading(true);
-    await new Promise((r) => setTimeout(r, 900));
-    saveUser(form);
+    const userData = {
+      name: form.name.trim(),
+      email: form.email.trim(),
+      crmUf: form.crmUf,
+      crmNumber: form.crmNumber.trim(),
+      privacyConsent: form.privacyConsent,
+      commsConsent: form.commsConsent,
+    };
+    saveUser(userData);
+    await saveUserToSupabase({
+      ...userData,
+      registeredAt: new Date().toISOString(),
+    });
     setSubmitted(true);
     await new Promise((r) => setTimeout(r, 600));
     router.push("/evento");
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-    if (errors[name as keyof FormErrors]) {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value, type } = e.target;
+    const checked = (e.target as HTMLInputElement).checked;
+    setForm((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+    if (name === "crmUf" || name === "crmNumber") {
+      setErrors((prev) => ({ ...prev, crm: undefined }));
+    } else if (errors[name as keyof FormErrors]) {
       setErrors((prev) => ({ ...prev, [name]: undefined }));
     }
   };
 
   return (
-    <main className="min-h-screen bg-hero-gradient text-white">
+    <main className="min-h-screen bg-hero-gradient text-white flex flex-col">
       {/* Nav */}
       <nav className="fixed top-0 w-full z-50 border-b border-white/10 bg-black/20 backdrop-blur-md">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-purple-700 rounded-lg flex items-center justify-center text-sm font-bold">
-              TS
+              FD
             </div>
-            <span className="font-semibold text-sm">TechSummit Brasil</span>
+            <span className="font-semibold text-sm">Fórum DII 2026</span>
           </div>
           <div className="flex items-center gap-3 text-sm text-white/60">
-            <span className="hidden sm:block">26 Jun 2025 · São Paulo, SP</span>
             <span className="tag-badge bg-purple-500/20 text-purple-300 border border-purple-500/30">
-              Gratuito
+              Takeda
             </span>
           </div>
         </div>
       </nav>
 
       {/* Hero */}
-      <section className="pt-32 pb-16 px-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+      <section className="flex-1 flex items-center px-4 sm:px-6 pt-16 pb-4">
+        <div className="max-w-6xl mx-auto w-full py-4">
+          <div className="grid lg:grid-cols-2 gap-6 lg:gap-12 items-center">
             {/* Left: Info */}
-            <div className="animate-slide-up">
-              <div className="flex items-center gap-2 mb-6">
+            <div className="animate-slide-up hidden lg:block">
+              <div className="flex items-center gap-2 mb-4">
                 <span className="tag-badge bg-purple-500/20 text-purple-300 border border-purple-500/30">
-                  ● AO VIVO · 26 Jun 2025
+                  ● Sessão Interativa
                 </span>
               </div>
 
-              <h1 className="text-5xl lg:text-6xl font-extrabold leading-tight mb-4">
-                TechSummit
+              <h1 className="text-4xl xl:text-5xl font-extrabold leading-tight mb-3">
+                Fórum DII
                 <br />
                 <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                  Brasil 2025
+                  2026
                 </span>
               </h1>
 
-              <p className="text-xl text-white/70 leading-relaxed mb-8">
-                O maior evento de tecnologia e inteligência artificial do Brasil.
-                2 dias, +40 palestras, 3.000 participantes.
+              <p className="text-base text-white/70 leading-relaxed">
+                Preencha seus dados para participar da sessão interativa.
               </p>
-
-              <div className="flex flex-wrap gap-4 mb-10 text-sm text-white/60">
-                <div className="flex items-center gap-2">
-                  <span>📍</span>
-                  <span>Centro de Convenções Frei Caneca, SP</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span>📅</span>
-                  <span>26–27 de Junho de 2025</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span>🎟️</span>
-                  <span>Entrada gratuita</span>
-                </div>
-              </div>
-
-              {/* Speakers */}
-              <div>
-                <p className="text-xs uppercase tracking-widest text-white/40 mb-4 font-medium">
-                  Palestrantes confirmados
-                </p>
-                <div className="grid grid-cols-2 gap-3">
-                  {SPEAKERS.map((s) => (
-                    <div key={s.name} className="flex items-center gap-3 glass-card px-3 py-2.5">
-                      <div
-                        className={`w-9 h-9 rounded-full bg-gradient-to-br ${s.color} flex items-center justify-center text-xs font-bold flex-shrink-0`}
-                      >
-                        {s.initials}
-                      </div>
-                      <div className="min-w-0">
-                        <p className="text-sm font-medium truncate">{s.name}</p>
-                        <p className="text-xs text-white/50 truncate">{s.title}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
             </div>
 
             {/* Right: Form */}
             <div className="animate-fade-in">
-              <div className="glass-card p-8 shadow-2xl shadow-purple-900/30">
+              <div className="glass-card p-5 sm:p-6 shadow-2xl shadow-purple-900/30">
                 {!submitted ? (
                   <>
-                    <div className="mb-6">
-                      <h2 className="text-2xl font-bold mb-1">
-                        Garanta sua vaga
+                    <div className="mb-4">
+                      <h2 className="text-xl font-bold mb-0.5">
+                        Fórum DII 2026
                       </h2>
-                      <p className="text-white/50 text-sm">
-                        Cadastro rápido e gratuito
+                      <p className="text-white/50 text-xs">
+                        Preencha seus dados para participar da sessão interativa
                       </p>
                     </div>
 
-                    <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+                    <form onSubmit={handleSubmit} className="space-y-3" noValidate>
                       <div>
                         <label className="label-text">
-                          Nome completo <span className="text-purple-400">*</span>
+                          Nome Completo <span className="text-purple-400">*</span>
                         </label>
                         <input
                           type="text"
                           name="name"
                           value={form.name}
                           onChange={handleChange}
-                          placeholder="João da Silva"
-                          className={`input-field ${errors.name ? "border-red-500/60 focus:ring-red-500/40" : ""}`}
+                          placeholder="Ex.: Dr. João Silva"
                           autoComplete="name"
+                          className={`input-field ${errors.name ? "border-red-500/60 focus:ring-red-500/40" : ""}`}
                         />
                         {errors.name && (
                           <p className="error-text">{errors.name}</p>
@@ -216,78 +191,110 @@ export default function LandingPage() {
                           name="email"
                           value={form.email}
                           onChange={handleChange}
-                          placeholder="joao@empresa.com.br"
-                          className={`input-field ${errors.email ? "border-red-500/60 focus:ring-red-500/40" : ""}`}
+                          placeholder="seu.email@exemplo.com"
                           autoComplete="email"
+                          className={`input-field ${errors.email ? "border-red-500/60 focus:ring-red-500/40" : ""}`}
                         />
                         {errors.email && (
                           <p className="error-text">{errors.email}</p>
                         )}
                       </div>
 
-                      <div className="grid grid-cols-2 gap-3">
-                        <div>
-                          <label className="label-text">Telefone</label>
-                          <input
-                            type="tel"
-                            name="phone"
-                            value={form.phone}
+                      <div>
+                        <label className="label-text">
+                          CRM <span className="text-purple-400">*</span>
+                        </label>
+                        <div className="flex gap-3">
+                          <select
+                            name="crmUf"
+                            value={form.crmUf}
                             onChange={handleChange}
-                            placeholder="(11) 99999-0000"
-                            className="input-field"
-                            autoComplete="tel"
-                          />
-                        </div>
-                        <div>
-                          <label className="label-text">Empresa</label>
+                            className={`input-field w-24 ${errors.crm && !form.crmUf ? "border-red-500/60 focus:ring-red-500/40" : ""}`}
+                          >
+                            <option value="" className="bg-slate-800">
+                              UF
+                            </option>
+                            {UFS.map((uf) => (
+                              <option key={uf} value={uf} className="bg-slate-800">
+                                {uf}
+                              </option>
+                            ))}
+                          </select>
                           <input
                             type="text"
-                            name="company"
-                            value={form.company}
+                            name="crmNumber"
+                            value={form.crmNumber}
                             onChange={handleChange}
-                            placeholder="Sua empresa"
-                            className="input-field"
-                            autoComplete="organization"
+                            placeholder="1234567"
+                            inputMode="numeric"
+                            maxLength={7}
+                            className={`input-field flex-1 ${errors.crm && !form.crmNumber ? "border-red-500/60 focus:ring-red-500/40" : ""}`}
                           />
                         </div>
+                        {errors.crm && (
+                          <p className="error-text">{errors.crm}</p>
+                        )}
                       </div>
 
                       <div>
-                        <label className="label-text">Cargo</label>
-                        <select
-                          name="role"
-                          value={form.role}
-                          onChange={handleChange}
-                          className="input-field"
+                        <label
+                          className={`flex items-start gap-3 bg-white/5 border rounded-xl px-3 py-2.5 cursor-pointer transition
+                            ${errors.privacyConsent ? "border-red-500/60" : "border-white/20"}`}
                         >
-                          <option value="" className="bg-slate-800">
-                            Selecione seu cargo
-                          </option>
-                          <option value="Desenvolvedor(a)" className="bg-slate-800">
-                            Desenvolvedor(a)
-                          </option>
-                          <option value="Tech Lead" className="bg-slate-800">
-                            Tech Lead / Engenheiro(a) Sênior
-                          </option>
-                          <option value="CTO / VP Engineering" className="bg-slate-800">
-                            CTO / VP Engineering
-                          </option>
-                          <option value="Product Manager" className="bg-slate-800">
-                            Product Manager
-                          </option>
-                          <option value="Designer" className="bg-slate-800">
-                            Designer
-                          </option>
-                          <option value="Estudante" className="bg-slate-800">
-                            Estudante
-                          </option>
-                          <option value="Outro" className="bg-slate-800">
-                            Outro
-                          </option>
-                        </select>
+                          <input
+                            type="checkbox"
+                            name="privacyConsent"
+                            checked={form.privacyConsent}
+                            onChange={handleChange}
+                            className="mt-0.5 w-4 h-4 accent-purple-600 flex-shrink-0"
+                          />
+                          <span className="text-xs text-white/70 leading-relaxed">
+                            Declaro que li e concordo com a{" "}
+                            <a
+                              href="https://www.takeda.com/pt-br/aviso-de-privacidade/"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="font-semibold text-purple-300 underline"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              Política de Privacidade da Takeda
+                            </a>{" "}
+                            e os termos de uso deste evento.{" "}
+                            <span className="text-purple-400">*</span>
+                          </span>
+                        </label>
+                        {errors.privacyConsent && (
+                          <p className="error-text">{errors.privacyConsent}</p>
+                        )}
                       </div>
 
-                      <div className="pt-2">
+                      <label className="flex items-start gap-3 bg-white/5 border border-white/20 rounded-xl px-3 py-2.5 cursor-pointer transition">
+                        <input
+                          type="checkbox"
+                          name="commsConsent"
+                          checked={form.commsConsent}
+                          onChange={handleChange}
+                          className="mt-0.5 w-4 h-4 accent-purple-600 flex-shrink-0"
+                        />
+                        <span className="text-xs text-white/70 leading-relaxed">
+                          Autorizo a coleta e o processamento dos meus dados para
+                          personalização de comunicações futuras nos meios de
+                          comunicação Takeda.{" "}
+                          <a
+                            href="https://www.takeda.com/pt-br/aviso-de-privacidade/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="font-semibold text-purple-300 underline"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            Saiba mais
+                          </a>
+                        </span>
+                      </label>
+
+                      <p className="text-xs text-white/30">* Campos obrigatórios</p>
+
+                      <div className="pt-0.5">
                         <button
                           type="submit"
                           disabled={loading}
@@ -318,7 +325,7 @@ export default function LandingPage() {
                             </>
                           ) : (
                             <>
-                              Quero participar
+                              Acessar Evento
                               <svg
                                 className="w-4 h-4"
                                 fill="none"
@@ -337,10 +344,6 @@ export default function LandingPage() {
                         </button>
                       </div>
 
-                      <p className="text-center text-xs text-white/30 pt-1">
-                        Seus dados ficam salvos apenas no seu navegador.
-                        Sem spam, sem compartilhamento.
-                      </p>
                     </form>
                   </>
                 ) : (
@@ -372,26 +375,8 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Why attend */}
-      <section className="py-16 px-6 border-t border-white/5">
-        <div className="max-w-6xl mx-auto">
-          <p className="text-center text-xs uppercase tracking-widest text-white/30 mb-10 font-medium">
-            Por que participar?
-          </p>
-          <div className="grid md:grid-cols-3 gap-6">
-            {FEATURES.map((f) => (
-              <div key={f.title} className="glass-card p-6">
-                <div className="text-3xl mb-3">{f.icon}</div>
-                <h3 className="font-semibold mb-2">{f.title}</h3>
-                <p className="text-white/50 text-sm leading-relaxed">{f.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       <footer className="py-8 px-6 border-t border-white/5 text-center text-white/30 text-sm">
-        TechSummit Brasil 2025 · Todos os direitos reservados ·{" "}
+        Fórum DII 2026 · Takeda ·{" "}
         <span className="text-white/20">POC Demo</span>
       </footer>
     </main>
