@@ -377,7 +377,7 @@ export default function LandingPage() {
 
       <footer className="py-8 px-6 border-t border-white/5 text-center text-white/30 text-sm">
         Fórum DII 2026 · Takeda ·{" "}
-        <span className="text-white/20">POC Demo</span>
+        
       </footer>
     </main>
   );

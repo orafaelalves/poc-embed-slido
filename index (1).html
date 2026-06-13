@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#3E1F63">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="format-detection" content="telephone=no">
+    <title>F&oacute;rum DII 2026</title>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+        :root {
+            --primary: #5B2D8E; --primary-dark: #3E1F63; --primary-light: #7B3FA0;
+            --accent: #F26522; --accent-hover: #D9551A;
+            --bg-gradient-1: #2D1450; --bg-gradient-2: #4A2380; --bg-gradient-3: #5B2D8E;
+            --bg-card: #ffffff; --bg-light: #F7F3FC; --bg-highlight: #F3EDF9;
+            --border-light: #E0D4F0; --text-dark: #1E1233; --text-body: #3A2E4D; --text-muted: #7A6E8A;
+            --error: #D42B2B; --success: #2D8E5B;
+            --radius: 14px; --radius-sm: 8px;
+            --shadow: 0 8px 32px rgba(59,30,99,0.10);
+            --shadow-sm: 0 2px 8px rgba(59,30,99,0.06);
+            --shadow-lg: 0 16px 48px rgba(59,30,99,0.16);
+            --transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            --safe-top: env(safe-area-inset-top, 0px);
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
+        }
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue', sans-serif;
+            background: linear-gradient(160deg, var(--bg-gradient-1) 0%, var(--bg-gradient-2) 45%, var(--bg-gradient-3) 100%);
+            min-height: 100vh; min-height: 100dvh;
+            display: flex; align-items: center; justify-content: center;
+            padding: 12px; padding-top: calc(12px + var(--safe-top)); padding-bottom: calc(12px + var(--safe-bottom));
+            color: var(--text-body); font-size: 16px; line-height: 1.5;
+            -webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: transparent;
+        }
+        @keyframes fadeInUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes shake { 0%,100%{transform:translateX(0)} 20%,60%{transform:translateX(-6px)} 40%,80%{transform:translateX(6px)} }
+        @keyframes spin { to{transform:rotate(360deg)} }
+        .fade-in { animation: fadeInUp 0.45s ease-out forwards; }
+        .shake { animation: shake 0.35s ease; }
+        .view { display: none; width: 100%; max-width: 500px; }
+        .view.active { display: block; }
+        .card { background: var(--bg-card); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; animation: fadeInUp 0.45s ease-out; }
+        .card-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            padding: 36px 24px 28px; text-align: center; color: #fff; position: relative;
+        }
+        .card-header::after { content:''; position:absolute; bottom:-1px; left:0; right:0; height:16px; background:var(--bg-card); border-radius:50% 50% 0 0; }
+        .card-header h1 { font-size: 1.45rem; font-weight: 700; margin-bottom: 6px; letter-spacing: -0.3px; }
+        .card-header p { font-size: 0.88rem; opacity: 0.8; font-weight: 400; }
+        .card-body { padding: 24px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display:block; font-size:0.85rem; font-weight:600; color:var(--text-dark); margin-bottom:7px; }
+        .form-group label .required { color: var(--accent); margin-left: 2px; }
+        .form-group input[type="text"], .form-group input[type="email"] {
+            width:100%; padding:14px 16px; border:1.5px solid var(--border-light); border-radius:var(--radius-sm);
+            font-size:16px; color:var(--text-dark); transition:var(--transition); background:var(--bg-light);
+            -webkit-appearance: none; appearance: none;
+        }
+        .form-group input:focus { outline:none; border-color:var(--primary-light); background:#fff; box-shadow:0 0 0 3px rgba(91,45,142,0.10); }
+        .form-group input.error, .form-group select.error { border-color: var(--error); background:#FEF5F5; }
+        .form-group .error-msg { color:var(--error); font-size:0.78rem; margin-top:5px; display:none; }
+        .form-group input.error ~ .error-msg { display: block; }
+        .crm-row { display:flex; gap:10px; }
+        .crm-row .crm-uf { flex:0 0 90px; }
+        .crm-row .crm-number { flex:1; }
+        .crm-row select {
+            width:100%; padding:14px 8px; border:1.5px solid var(--border-light); border-radius:var(--radius-sm);
+            font-size:16px; color:var(--text-dark); transition:var(--transition); background:var(--bg-light);
+            -webkit-appearance: none; appearance: none; cursor:pointer;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%237A6E8A' d='M1.41 0L6 4.58 10.59 0 12 1.41l-6 6-6-6z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px;
+        }
+        .crm-row select:focus { outline:none; border-color:var(--primary-light); background:#fff; box-shadow:0 0 0 3px rgba(91,45,142,0.10); }
+        .crm-row select.error { border-color: var(--error); background:#FEF5F5; }
+        .crm-row input[type="text"] {
+            width:100%; padding:14px 16px; border:1.5px solid var(--border-light); border-radius:var(--radius-sm);
+            font-size:16px; color:var(--text-dark); transition:var(--transition); background:var(--bg-light);
+            -webkit-appearance: none; appearance: none;
+        }
+        .crm-row input:focus { outline:none; border-color:var(--primary-light); background:#fff; box-shadow:0 0 0 3px rgba(91,45,142,0.10); }
+        .crm-error { color:var(--error); font-size:0.78rem; margin-top:5px; display:none; }
+        .crm-error.visible { display: block; }
+
+        /* CONSENT BOXES */
+        .consent-section { margin-bottom: 24px; }
+        .consent-box { background:var(--bg-highlight); border:1.5px solid var(--border-light); border-radius:var(--radius-sm); padding:16px; margin-bottom:10px; }
+        .consent-box .consent-label { display:flex; align-items:flex-start; gap:12px; cursor:pointer; font-size:0.84rem; line-height:1.6; color:var(--text-body); }
+        .consent-box input[type="checkbox"] { width:22px; height:22px; min-width:22px; margin-top:2px; accent-color:var(--primary); flex-shrink:0; cursor:pointer; }
+        .consent-box.error { border-color: var(--error); background: #FEF5F5; }
+        .consent-box-error { color:var(--error); font-size:0.78rem; margin-top:-4px; margin-bottom:10px; display:none; }
+        .consent-box-error.visible { display: block; }
+        .privacy-link { color:var(--primary); text-decoration:underline; font-weight:700; cursor:pointer; }
+        .saiba-mais-link { color:var(--primary); text-decoration:underline; font-weight:600; cursor:pointer; font-size:0.82rem; }
+
+        .form-disclaimer { font-size:0.72rem; color:var(--text-muted); margin-bottom:16px; }
+        .btn-primary {
+            width:100%; padding:16px; border:none; border-radius:var(--radius-sm);
+            background: var(--accent); color:#fff;
+            font-size:1rem; font-weight:700; cursor:pointer; transition:var(--transition);
+            min-height:52px; -webkit-appearance:none; appearance:none;
+        }
+        .btn-primary:active { background:var(--accent-hover); transform:scale(0.98); }
+        .btn-secondary {
+            width:100%; padding:14px; border:1.5px solid var(--border-light); border-radius:var(--radius-sm);
+            background:var(--bg-light); color:var(--text-dark);
+            font-size:0.92rem; font-weight:600; cursor:pointer; transition:var(--transition);
+            min-height:48px; margin-top:10px;
+        }
+        .btn-secondary:active { background:var(--border-light); }
+        .confirm-icon {
+            width:64px; height:64px; border-radius:50%; background:var(--success);
+            display:flex; align-items:center; justify-content:center; margin:0 auto 20px;
+        }
+        .confirm-icon svg { width:32px; height:32px; fill:#fff; }
+        .confirm-title { font-size:1.2rem; font-weight:700; color:var(--text-dark); text-align:center; margin-bottom:4px; }
+        .confirm-subtitle { font-size:0.86rem; color:var(--text-muted); text-align:center; margin-bottom:24px; }
+        .user-data-card {
+            background:var(--bg-highlight); border:1px solid var(--border-light);
+            border-radius:var(--radius-sm); padding:16px; margin-bottom:24px;
+        }
+        .user-data-row { display:flex; justify-content:space-between; align-items:center; padding:8px 0; }
+        .user-data-row:not(:last-child) { border-bottom:1px solid var(--border-light); }
+        .user-data-label { font-size:0.8rem; color:var(--text-muted); font-weight:500; }
+        .user-data-value { font-size:0.88rem; color:var(--text-dark); font-weight:600; text-align:right; word-break:break-all; max-width:60%; }
+        .redirect-status { text-align:center; margin-bottom:20px; }
+        .redirect-status .spinner {
+            display:inline-block; width:20px; height:20px; border:2.5px solid var(--border-light);
+            border-top-color:var(--primary); border-radius:50%; animation:spin 0.8s linear infinite;
+            vertical-align:middle; margin-right:8px;
+        }
+        .redirect-status span { font-size:0.88rem; color:var(--text-muted); font-weight:500; }
+
+        /* MODALS */
+        .modal-overlay {
+            display:none; position:fixed; inset:0; background:rgba(30,18,51,0.80); z-index:1000;
+            align-items:flex-end; justify-content:center; padding:0;
+            backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px);
+        }
+        .modal-overlay.active { display: flex; }
+        .info-modal {
+            background:#fff; border-radius:var(--radius) var(--radius) 0 0; width:100%;
+            max-height:85vh; max-height:85dvh; overflow:hidden; display:flex; flex-direction:column;
+            box-shadow:var(--shadow-lg); animation:fadeInUp 0.35s ease-out;
+        }
+        .info-modal-header {
+            background:linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            padding:20px; color:#fff; display:flex; align-items:center; justify-content:space-between; flex-shrink:0;
+        }
+        .info-modal-header h2 { font-size: 1.05rem; font-weight: 700; }
+        .info-modal-close {
+            background:rgba(255,255,255,0.12); border:none; color:#fff; width:40px; height:40px;
+            border-radius:50%; font-size:1.1rem; cursor:pointer; transition:var(--transition);
+            display:flex; align-items:center; justify-content:center;
+        }
+        .info-modal-close:active { background: rgba(255,255,255,0.3); }
+        .info-modal-body {
+            padding:24px 20px; padding-bottom:calc(24px + var(--safe-bottom));
+            overflow-y:auto; flex:1; font-size:0.9rem; line-height:1.75; color:var(--text-body);
+            -webkit-overflow-scrolling: touch;
+        }
+        .info-modal-body h3 { color:var(--primary-dark); font-size:0.95rem; margin:20px 0 8px 0; font-weight:700; }
+        .info-modal-body h3:first-child { margin-top: 0; }
+        .info-modal-body p { margin-bottom: 10px; }
+        .info-modal-body ul { margin: 8px 0 14px 20px; }
+        .info-modal-body ul li { margin-bottom: 6px; }
+        .info-modal-body .highlight {
+            background:var(--bg-highlight); border-left:3px solid var(--primary);
+            padding:14px 16px; border-radius:0 var(--radius-sm) var(--radius-sm) 0; margin:16px 0; font-size:0.86rem;
+        }
+        .info-modal-footer {
+            padding:16px 20px; padding-bottom:calc(16px + var(--safe-bottom));
+            border-top:1px solid var(--border-light); text-align:center; flex-shrink:0;
+        }
+        .btn-understood {
+            padding:14px 40px; border:none; border-radius:var(--radius-sm); background:var(--accent);
+            color:#fff; font-size:0.95rem; font-weight:700; cursor:pointer; transition:var(--transition);
+            min-height:50px; min-width:160px;
+        }
+        .btn-understood:active { background:var(--accent-hover); }
+
+        /* ADMIN */
+        .admin-panel {
+            background:#fff; border-radius:var(--radius) var(--radius) 0 0; width:100%; max-height:92vh; max-height:92dvh;
+            overflow:auto; box-shadow:var(--shadow-lg); animation:fadeInUp 0.35s ease-out;
+            padding-bottom: var(--safe-bottom);
+        }
+        .admin-header {
+            background:var(--primary-dark); padding:18px 20px; color:#fff;
+            display:flex; align-items:center; justify-content:space-between;
+            border-radius:var(--radius) var(--radius) 0 0; position:sticky; top:0; z-index:10;
+        }
+        .admin-header h2 { font-size: 1rem; font-weight: 700; }
+        .admin-actions { display: flex; gap: 8px; }
+        .admin-actions button {
+            padding:10px 16px; border:none; border-radius:6px; font-size:0.82rem;
+            font-weight:600; cursor:pointer; transition:var(--transition); min-height:40px;
+        }
+        .btn-export { background: var(--accent); color: #fff; }
+        .btn-export:active { background: var(--accent-hover); }
+        .btn-close-modal { background: rgba(255,255,255,0.12); color: #fff; }
+        .btn-close-modal:active { background: rgba(255,255,255,0.22); }
+        .admin-stats { display:flex; gap:10px; padding:16px 20px; background:var(--bg-light); flex-wrap:nowrap; overflow-x:auto; }
+        .stat-card {
+            flex:1; min-width:80px; background:#fff; padding:14px 10px; border-radius:var(--radius-sm);
+            text-align:center; box-shadow:var(--shadow-sm); border:1px solid var(--border-light); flex-shrink:0;
+        }
+        .stat-card .number { font-size: 1.4rem; font-weight: 700; color: var(--primary); }
+        .stat-card .label { font-size: 0.62rem; color: var(--text-muted); margin-top: 4px; text-transform:uppercase; letter-spacing:0.3px; }
+        .admin-table-wrap { padding: 16px 20px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        .admin-table { width:100%; border-collapse:collapse; font-size:0.75rem; white-space:nowrap; }
+        .admin-table th { background:var(--primary); color:#fff; padding:9px 10px; text-align:left; font-weight:600; }
+        .admin-table td { padding:9px 10px; border-bottom:1px solid #F0ECF5; color:var(--text-body); }
+        .admin-table tr:active td { background: var(--bg-highlight); }
+        .admin-table th:first-child { border-radius: var(--radius-sm) 0 0 0; }
+        .admin-table th:last-child { border-radius: 0 var(--radius-sm) 0 0; }
+
+        /* PASSWORD */
+        .password-modal {
+            background:#fff; border-radius:var(--radius) var(--radius) 0 0; width:100%;
+            box-shadow:var(--shadow-lg); animation:fadeInUp 0.35s ease-out; overflow:hidden;
+            padding-bottom: var(--safe-bottom);
+        }
+        .password-modal-header { background:var(--primary-dark); padding:24px 20px; color:#fff; text-align:center; }
+        .password-modal-header h2 { font-size: 1.05rem; font-weight: 700; margin-bottom:4px; }
+        .password-modal-header p { font-size: 0.82rem; opacity: 0.65; }
+        .password-modal-body { padding: 24px 20px; }
+        .password-modal-body input[type="password"] {
+            width:100%; padding:14px 16px; border:1.5px solid var(--border-light); border-radius:var(--radius-sm);
+            font-size:16px; color:var(--text-dark); transition:var(--transition); background:var(--bg-light); margin-bottom:8px;
+            -webkit-appearance: none; appearance: none;
+        }
+        .password-modal-body input[type="password"]:focus { outline:none; border-color:var(--primary-light); background:#fff; box-shadow:0 0 0 3px rgba(91,45,142,0.10); }
+        .password-modal-body input.error { border-color: var(--error); }
+        .pw-error-msg { color:var(--error); font-size:0.8rem; margin-bottom:12px; min-height:22px; }
+        .pw-blocked-msg { color:var(--error); font-size:0.86rem; text-align:center; padding:16px; font-weight:600; line-height:1.5; }
+        .pw-actions { display: flex; gap: 10px; }
+        .pw-actions button {
+            flex:1; padding:14px; border:none; border-radius:var(--radius-sm);
+            font-size:0.92rem; font-weight:700; cursor:pointer; transition:var(--transition); min-height:50px;
+        }
+        .btn-pw-submit { background:var(--accent); color:#fff; }
+        .btn-pw-submit:active { background:var(--accent-hover); }
+        .btn-pw-cancel { background: #F0ECF5; color: var(--text-dark); }
+        .btn-pw-cancel:active { background: #E0D4F0; }
+
+        .toast {
+            position:fixed; top:calc(12px + var(--safe-top)); left:12px; right:12px;
+            background:var(--success); color:#fff; padding:16px 20px; border-radius:var(--radius-sm);
+            font-size:0.9rem; font-weight:600; box-shadow:0 4px 16px rgba(0,0,0,0.15);
+            transform:translateY(-120%); transition:transform 0.4s ease; z-index:2000; text-align:center;
+        }
+        .toast.show { transform: translateY(0); }
+        .footer-note {
+            text-align:center; margin-top:20px; padding:0 8px;
+            font-size:0.76rem; color:rgba(255,255,255,0.35); letter-spacing:0.2px; line-height:1.8;
+        }
+        .footer-link {
+            color:rgba(255,255,255,0.55); text-decoration:none; cursor:pointer;
+            font-weight:500; padding:6px 2px; display:inline-block;
+        }
+        .footer-link:active { color:#fff; }
+        .footer-divider { margin: 0 6px; opacity: 0.3; }
+
+        @media (min-width: 641px) {
+            body { padding: 24px; }
+            .card-header { padding: 40px 32px 28px; }
+            .card-header h1 { font-size: 1.6rem; }
+            .card-body { padding: 32px; }
+            .modal-overlay { align-items: center; padding: 20px; }
+            .admin-panel { border-radius: var(--radius); max-width: 960px; max-height: 85vh; padding-bottom: 0; }
+            .admin-header { border-radius: var(--radius) var(--radius) 0 0; }
+            .password-modal { border-radius: var(--radius); max-width: 400px; padding-bottom: 0; }
+            .info-modal { border-radius: var(--radius); max-width: 560px; max-height: 85vh; }
+            .btn-primary:hover { background:var(--accent-hover); transform:translateY(-1px); box-shadow:0 4px 16px rgba(242,101,34,0.30); }
+            .btn-secondary:hover { background:var(--border-light); }
+            .btn-export:hover { background: var(--accent-hover); }
+            .btn-close-modal:hover { background: rgba(255,255,255,0.22); }
+            .btn-pw-submit:hover { background:var(--accent-hover); }
+            .btn-pw-cancel:hover { background: #E0D4F0; }
+            .btn-understood:hover { background:var(--accent-hover); }
+            .info-modal-close:hover { background: rgba(255,255,255,0.25); }
+            .admin-table tr:hover td { background: var(--bg-highlight); }
+            .footer-link:hover { color:#fff; text-decoration:underline; }
+            .privacy-link:hover { color: var(--accent); }
+            .saiba-mais-link:hover { color: var(--accent); }
+        }
+        @media (max-width: 380px) {
+            .card-header h1 { font-size: 1.25rem; }
+            .crm-row .crm-uf { flex: 0 0 80px; }
+            .stat-card .number { font-size: 1.2rem; }
+            .admin-actions button { padding: 8px 10px; font-size: 0.76rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="viewRegister" class="view active">
+        <div class="card fade-in">
+            <div class="card-header">
+                <h1>F&oacute;rum DII 2026</h1>
+                <p>Preencha seus dados para participar da sess&atilde;o interativa</p>
+            </div>
+            <div class="card-body">
+                <form id="registerForm" novalidate>
+                    <div class="form-group">
+                        <label>Nome Completo <span class="required">*</span></label>
+                        <input type="text" id="fieldName" placeholder="Ex.: Dr. Jo&atilde;o Silva" autocomplete="name" enterkeyhint="next">
+                        <div class="error-msg">Por favor, insira seu nome completo.</div>
+                    </div>
+                    <div class="form-group">
+                        <label>E-mail <span class="required">*</span></label>
+                        <input type="email" id="fieldEmail" placeholder="seu.email@exemplo.com" autocomplete="email" enterkeyhint="next" inputmode="email">
+                        <div class="error-msg">Insira um e-mail v&aacute;lido.</div>
+                    </div>
+                    <div class="form-group">
+                        <label>CRM <span class="required">*</span></label>
+                        <div class="crm-row">
+                            <div class="crm-uf">
+                                <select id="fieldCrmUf">
+                                    <option value="" disabled selected>UF</option>
+                                    <option value="AC">AC</option><option value="AL">AL</option>
+                                    <option value="AM">AM</option><option value="AP">AP</option>
+                                    <option value="BA">BA</option><option value="CE">CE</option>
+                                    <option value="DF">DF</option><option value="ES">ES</option>
+                                    <option value="GO">GO</option><option value="MA">MA</option>
+                                    <option value="MG">MG</option><option value="MS">MS</option>
+                                    <option value="MT">MT</option><option value="PA">PA</option>
+                                    <option value="PB">PB</option><option value="PE">PE</option>
+                                    <option value="PI">PI</option><option value="PR">PR</option>
+                                    <option value="RJ">RJ</option><option value="RN">RN</option>
+                                    <option value="RO">RO</option><option value="RR">RR</option>
+                                    <option value="RS">RS</option><option value="SC">SC</option>
+                                    <option value="SE">SE</option><option value="SP">SP</option>
+                                    <option value="TO">TO</option>
+                                </select>
+                            </div>
+                            <div class="crm-number">
+                                <input type="text" id="fieldCrmNum" placeholder="1234567" inputmode="numeric" pattern="[0-9]*" enterkeyhint="done">
+                            </div>
+                        </div>
+                        <div class="crm-error" id="crmError">Selecione a UF e insira o n&uacute;mero do CRM.</div>
+                    </div>
+
+                    <div class="consent-section">
+                        <div class="consent-box" id="consentBox1">
+                            <label class="consent-label">
+                                <input type="checkbox" id="consentPrivacy">
+                                <span>Declaro que li e concordo com a <a href="https://www.takeda.com/pt-br/aviso-de-privacidade/" target="_blank" rel="noopener noreferrer" class="privacy-link">Pol&iacute;tica de Privacidade da Takeda</a> e os termos de uso deste evento. <span class="required">*</span></span>
+                            </label>
+                        </div>
+                        <div class="consent-box-error" id="consentError1">Voc&ecirc; deve aceitar a Pol&iacute;tica de Privacidade para continuar.</div>
+
+                        <div class="consent-box" id="consentBox2">
+                            <label class="consent-label">
+                                <input type="checkbox" id="consentComm">
+                                <span>Autorizo a coleta e o processamento dos meus dados para personaliza&ccedil;&atilde;o de comunica&ccedil;&otilde;es futuras nos meios de comunica&ccedil;&atilde;o Takeda. <span class="saiba-mais-link" onclick="event.preventDefault(); event.stopPropagation(); openInfoModal();">Saiba mais</span></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <p class="form-disclaimer">* Campos obrigat&oacute;rios</p>
+                    <button type="submit" class="btn-primary">Acessar Evento</button>
+                </form>
+            </div>
+        </div>
+        <p class="footer-note">
+            <a href="https://www.takeda.com/pt-br/aviso-de-privacidade/" target="_blank" rel="noopener noreferrer" class="footer-link">Pol&iacute;tica de Privacidade</a>
+            <span class="footer-divider">|</span>
+            <span style="opacity:0.6;">Ctrl + Shift + A</span>
+        </p>
+    </div>
+
+    <div id="viewConfirm" class="view">
+        <div class="card fade-in">
+            <div class="card-header">
+                <h1>F&oacute;rum DII 2026</h1>
+                <p>Sess&atilde;o interativa</p>
+            </div>
+            <div class="card-body">
+                <div class="confirm-icon">
+                    <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+                </div>
+                <div class="confirm-title" id="confirmTitle">Registro confirmado</div>
+                <div class="confirm-subtitle" id="confirmSubtitle">Seus dados foram salvos com sucesso</div>
+                <div class="user-data-card">
+                    <div class="user-data-row">
+                        <span class="user-data-label">Nome</span>
+                        <span class="user-data-value" id="confirmName"></span>
+                    </div>
+                    <div class="user-data-row">
+                        <span class="user-data-label">E-mail</span>
+                        <span class="user-data-value" id="confirmEmail"></span>
+                    </div>
+                    <div class="user-data-row">
+                        <span class="user-data-label">CRM</span>
+                        <span class="user-data-value" id="confirmCRM"></span>
+                    </div>
+                </div>
+                <div class="redirect-status" id="redirectStatus">
+                    <span class="spinner"></span>
+                    <span>Entrando no evento em <strong id="countdown">3</strong>s...</span>
+                </div>
+                <button class="btn-primary" onclick="redirectToSlido()">Entrar agora</button>
+                <button class="btn-secondary" onclick="newRegister()">Novo registro</button>
+            </div>
+        </div>
+        <p class="footer-note">
+            <a href="https://www.takeda.com/pt-br/aviso-de-privacidade/" target="_blank" rel="noopener noreferrer" class="footer-link">Pol&iacute;tica de Privacidade</a>
+        </p>
+    </div>
+
+    <div class="modal-overlay" id="passwordOverlay">
+        <div class="password-modal" id="passwordModal">
+            <div class="password-modal-header">
+                <h2>Painel Administrativo</h2>
+                <p>&Aacute;rea restrita &mdash; insira a senha de acesso</p>
+            </div>
+            <div class="password-modal-body">
+                <div id="pwFormArea">
+                    <input type="password" id="pwInput" placeholder="Digite a senha..." enterkeyhint="go">
+                    <div class="pw-error-msg" id="pwErrorMsg"></div>
+                    <div class="pw-actions">
+                        <button class="btn-pw-cancel" onclick="closePasswordModal()">Cancelar</button>
+                        <button class="btn-pw-submit" onclick="submitPassword()">Entrar</button>
+                    </div>
+                </div>
+                <div id="pwBlockedArea" style="display:none;">
+                    <div class="pw-blocked-msg">
+                        Acesso bloqueado por excesso de tentativas.<br>
+                        Tente novamente em <strong id="blockCountdown">60</strong> segundos.
+                    </div>
+                    <div class="pw-actions" style="margin-top:16px;">
+                        <button class="btn-pw-cancel" onclick="closePasswordModal()" style="flex:1;">Fechar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="adminOverlay">
+        <div class="admin-panel">
+            <div class="admin-header">
+                <h2>Painel Administrativo</h2>
+                <div class="admin-actions">
+                    <button class="btn-export" onclick="exportCSV()">Exportar CSV</button>
+                    <button class="btn-close-modal" onclick="closeAdmin()">Fechar</button>
+                </div>
+            </div>
+            <div class="admin-stats">
+                <div class="stat-card"><div class="number" id="statTotal">0</div><div class="label">Total</div></div>
+                <div class="stat-card"><div class="number" id="statToday">0</div><div class="label">Hoje</div></div>
+                <div class="stat-card"><div class="number" id="statPrivacy">0</div><div class="label">Privacidade</div></div>
+                <div class="stat-card"><div class="number" id="statComm">0</div><div class="label">Comunica&ccedil;&atilde;o</div></div>
+            </div>
+            <div class="admin-table-wrap">
+                <table class="admin-table">
+                    <thead><tr>
+                        <th>#</th><th>Nome</th><th>E-mail</th><th>CRM</th>
+                        <th>Privacidade</th><th>Comunica&ccedil;&atilde;o</th><th>Data/Hora</th>
+                    </tr></thead>
+                    <tbody id="adminTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="infoOverlay">
+        <div class="info-modal">
+            <div class="info-modal-header">
+                <h2>Uso dos Dados para Comunica&ccedil;&atilde;o</h2>
+                <button class="info-modal-close" onclick="closeInfoModal()">&#10005;</button>
+            </div>
+            <div class="info-modal-body">
+                <h3>Quais dados ser&atilde;o utilizados?</h3>
+                <ul>
+                    <li><strong>Nome completo</strong></li>
+                    <li><strong>Endere&ccedil;o de e-mail</strong></li>
+                    <li><strong>CRM e UF de registro</strong></li>
+                    <li><strong>Dados de intera&ccedil;&atilde;o</strong> (participa&ccedil;&atilde;o em sess&otilde;es e respostas)</li>
+                </ul>
+
+                <h3>Como seus dados ser&atilde;o utilizados?</h3>
+                <p>Ao consentir, seus dados poder&atilde;o ser utilizados para:</p>
+                <ul>
+                    <li><strong>Personaliza&ccedil;&atilde;o de comunica&ccedil;&otilde;es</strong> &mdash; envio de conte&uacute;dos relevantes &agrave; sua &aacute;rea de atua&ccedil;&atilde;o</li>
+                    <li><strong>Convites para eventos futuros</strong> &mdash; f&oacute;runs, webin&aacute;rios e encontros cient&iacute;ficos alinhados ao seu perfil profissional</li>
+                    <li><strong>Recomenda&ccedil;&otilde;es de conte&uacute;do</strong> &mdash; materiais, estudos e atualiza&ccedil;&otilde;es sobre terapias e &aacute;reas de interesse</li>
+                </ul>
+
+                <h3>Base legal e seus direitos</h3>
+                <p>O processamento &eacute; realizado em conformidade com a <strong>LGPD (Lei n&ordm; 13.709/2018)</strong>, com base no seu consentimento livre e informado.</p>
+
+                <div class="highlight">
+                    <strong>Revoga&ccedil;&atilde;o:</strong> Voc&ecirc; pode <strong>revogar este consentimento a qualquer momento</strong>, sem preju&iacute;zo &agrave; sua participa&ccedil;&atilde;o no evento, entrando em contato com a equipe organizadora ou atrav&eacute;s dos canais de comunica&ccedil;&atilde;o da Takeda.
+                </div>
+
+                <p>Este consentimento &eacute; <strong>opcional</strong> e n&atilde;o impede o acesso ao evento caso n&atilde;o seja concedido.</p>
+            </div>
+            <div class="info-modal-footer">
+                <button class="btn-understood" onclick="closeInfoModal()">Entendi</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+    (function() {
+        var DB_KEY = 'evento_slido_registros';
+        var SLIDO_BASE = 'https://app.sli.do/event/r3vKaTdQ6RgCqjee3aLtbN';
+        var ADMIN_PASSWORD = 'Takeda*2026';
+        var MAX_ATTEMPTS = 3;
+        var BLOCK_SECONDS = 60;
+        var pwAttempts = 0;
+        var pwBlocked = false;
+        var blockTimer = null;
+        var redirectTimer = null;
+        var currentUser = null;
+
+        function getDB() {
+            try { return JSON.parse(localStorage.getItem(DB_KEY)) || []; }
+            catch(e) { return []; }
+        }
+        function saveDB(data) { localStorage.setItem(DB_KEY, JSON.stringify(data)); }
+        function addRecord(record) { var db = getDB(); db.push(record); saveDB(db); }
+        function findByEmail(email) {
+            return getDB().find(function(r) { return r.email.toLowerCase() === email.toLowerCase(); });
+        }
+
+        var viewRegister = document.getElementById('viewRegister');
+        var viewConfirm = document.getElementById('viewConfirm');
+        var form = document.getElementById('registerForm');
+        var fieldName = document.getElementById('fieldName');
+        var fieldEmail = document.getElementById('fieldEmail');
+        var fieldCrmUf = document.getElementById('fieldCrmUf');
+        var fieldCrmNum = document.getElementById('fieldCrmNum');
+        var crmError = document.getElementById('crmError');
+        var consentPrivacy = document.getElementById('consentPrivacy');
+        var consentComm = document.getElementById('consentComm');
+        var consentBox1 = document.getElementById('consentBox1');
+        var consentError1 = document.getElementById('consentError1');
+
+        fieldCrmNum.addEventListener('input', function() {
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+
+        var lastUser = localStorage.getItem('evento_slido_current_user');
+        if (lastUser) {
+            try {
+                var user = JSON.parse(lastUser);
+                if (user && user.name && user.email) {
+                    currentUser = user;
+                    showConfirmView(user, true);
+                }
+            } catch(e) {}
+        }
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            var valid = true;
+            if (!fieldName.value.trim()) { fieldName.classList.add('error'); valid = false; }
+            else { fieldName.classList.remove('error'); }
+            var emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            if (!emailRe.test(fieldEmail.value.trim())) { fieldEmail.classList.add('error'); valid = false; }
+            else { fieldEmail.classList.remove('error'); }
+
+            var crmValid = true;
+            if (!fieldCrmUf.value) { fieldCrmUf.classList.add('error'); crmValid = false; }
+            else { fieldCrmUf.classList.remove('error'); }
+            if (!fieldCrmNum.value.trim()) { fieldCrmNum.classList.add('error'); crmValid = false; }
+            else { fieldCrmNum.classList.remove('error'); }
+            if (!crmValid) { crmError.classList.add('visible'); valid = false; }
+            else { crmError.classList.remove('visible'); }
+
+            if (!consentPrivacy.checked) {
+                consentBox1.classList.add('error');
+                consentError1.classList.add('visible');
+                valid = false;
+            } else {
+                consentBox1.classList.remove('error');
+                consentError1.classList.remove('visible');
+            }
+
+            if (!valid) return;
+
+            var crmFull = 'CRM/' + fieldCrmUf.value + ' ' + fieldCrmNum.value.trim();
+            var record = {
+                id: Date.now(),
+                name: fieldName.value.trim(),
+                email: fieldEmail.value.trim(),
+                crm: crmFull,
+                consent_privacy: true,
+                consent_communication: consentComm.checked,
+                timestamp: new Date().toISOString(),
+                interactions: []
+            };
+
+            var existing = findByEmail(record.email);
+            if (existing) {
+                currentUser = existing;
+                localStorage.setItem('evento_slido_current_user', JSON.stringify(existing));
+                logInteraction(existing.email, 'acesso_retorno');
+                showConfirmView(existing, true);
+                return;
+            }
+
+            addRecord(record);
+            currentUser = record;
+            localStorage.setItem('evento_slido_current_user', JSON.stringify(record));
+            logInteraction(record.email, 'primeiro_acesso');
+            showConfirmView(record, false);
+        });
+
+        [fieldName, fieldEmail, fieldCrmNum].forEach(function(f) {
+            f.addEventListener('input', function() { f.classList.remove('error'); });
+        });
+        fieldCrmUf.addEventListener('change', function() { fieldCrmUf.classList.remove('error'); });
+        consentPrivacy.addEventListener('change', function() {
+            consentBox1.classList.remove('error');
+            consentError1.classList.remove('visible');
+        });
+
+        function showConfirmView(user, isReturning) {
+            viewRegister.classList.remove('active');
+            viewConfirm.classList.add('active');
+            document.getElementById('confirmName').textContent = user.name;
+            document.getElementById('confirmEmail').textContent = user.email;
+            document.getElementById('confirmCRM').textContent = user.crm;
+            if (isReturning) {
+                document.getElementById('confirmTitle').textContent = 'Bem-vindo(a) de volta!';
+                document.getElementById('confirmSubtitle').textContent = 'Seus dados ja estao registrados';
+            } else {
+                document.getElementById('confirmTitle').textContent = 'Registro confirmado';
+                document.getElementById('confirmSubtitle').textContent = 'Seus dados foram salvos com sucesso';
+            }
+            var count = 3;
+            document.getElementById('countdown').textContent = count;
+            document.getElementById('redirectStatus').style.display = 'block';
+            if (redirectTimer) clearInterval(redirectTimer);
+            redirectTimer = setInterval(function() {
+                count--;
+                document.getElementById('countdown').textContent = count;
+                if (count <= 0) { clearInterval(redirectTimer); redirectToSlido(); }
+            }, 1000);
+        }
+
+        window.redirectToSlido = function() {
+            if (redirectTimer) clearInterval(redirectTimer);
+            if (!currentUser) return;
+            var url = SLIDO_BASE
+                + '?user_name=' + encodeURIComponent(currentUser.name)
+                + '&user_email=' + encodeURIComponent(currentUser.email);
+            logInteraction(currentUser.email, 'redirecionado_slido');
+            window.location.href = url;
+        };
+
+        window.newRegister = function() {
+            if (redirectTimer) clearInterval(redirectTimer);
+            localStorage.removeItem('evento_slido_current_user');
+            currentUser = null;
+            viewConfirm.classList.remove('active');
+            viewRegister.classList.add('active');
+            form.reset();
+        };
+
+        function logInteraction(email, type) {
+            var db = getDB();
+            var idx = db.findIndex(function(r) { return r.email.toLowerCase() === email.toLowerCase(); });
+            if (idx !== -1) {
+                if (!db[idx].interactions) db[idx].interactions = [];
+                db[idx].interactions.push({ type: type, timestamp: new Date().toISOString() });
+                saveDB(db);
+            }
+        }
+
+        function showToast(msg) {
+            var toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.classList.add('show');
+            setTimeout(function() { toast.classList.remove('show'); }, 3000);
+        }
+        window.showToast = showToast;
+
+        // Info modal (Saiba mais)
+        window.openInfoModal = function() { document.getElementById('infoOverlay').classList.add('active'); };
+        window.closeInfoModal = function() { document.getElementById('infoOverlay').classList.remove('active'); };
+        document.getElementById('infoOverlay').addEventListener('click', function(e) {
+            if (e.target === this) window.closeInfoModal();
+        });
+
+        // Password Modal
+        function openPasswordModal() {
+            var overlay = document.getElementById('passwordOverlay');
+            overlay.classList.add('active');
+            document.getElementById('pwInput').value = '';
+            document.getElementById('pwErrorMsg').textContent = '';
+            document.getElementById('pwInput').classList.remove('error');
+            if (pwBlocked) {
+                document.getElementById('pwFormArea').style.display = 'none';
+                document.getElementById('pwBlockedArea').style.display = 'block';
+            } else {
+                document.getElementById('pwFormArea').style.display = 'block';
+                document.getElementById('pwBlockedArea').style.display = 'none';
+                setTimeout(function() { document.getElementById('pwInput').focus(); }, 100);
+            }
+        }
+        window.closePasswordModal = function() { document.getElementById('passwordOverlay').classList.remove('active'); };
+        document.getElementById('passwordOverlay').addEventListener('click', function(e) {
+            if (e.target === this) window.closePasswordModal();
+        });
+
+        window.submitPassword = function() {
+            if (pwBlocked) return;
+            var input = document.getElementById('pwInput');
+            var errorMsg = document.getElementById('pwErrorMsg');
+            if (input.value === ADMIN_PASSWORD) {
+                pwAttempts = 0;
+                window.closePasswordModal();
+                openAdminPanel();
+            } else {
+                pwAttempts++;
+                input.classList.add('error');
+                var modal = document.getElementById('passwordModal');
+                modal.classList.add('shake');
+                setTimeout(function() { modal.classList.remove('shake'); }, 500);
+                var remaining = MAX_ATTEMPTS - pwAttempts;
+                if (remaining > 0) {
+                    errorMsg.textContent = 'Senha incorreta. ' + remaining + ' tentativa(s) restante(s).';
+                } else {
+                    pwBlocked = true;
+                    document.getElementById('pwFormArea').style.display = 'none';
+                    document.getElementById('pwBlockedArea').style.display = 'block';
+                    var cd = BLOCK_SECONDS;
+                    document.getElementById('blockCountdown').textContent = cd;
+                    blockTimer = setInterval(function() {
+                        cd--;
+                        document.getElementById('blockCountdown').textContent = cd;
+                        if (cd <= 0) {
+                            clearInterval(blockTimer);
+                            pwBlocked = false; pwAttempts = 0;
+                            document.getElementById('pwFormArea').style.display = 'block';
+                            document.getElementById('pwBlockedArea').style.display = 'none';
+                            document.getElementById('pwInput').value = '';
+                            document.getElementById('pwErrorMsg').textContent = '';
+                            document.getElementById('pwInput').classList.remove('error');
+                        }
+                    }, 1000);
+                }
+                input.value = '';
+                input.focus();
+            }
+        };
+        document.getElementById('pwInput').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') { e.preventDefault(); window.submitPassword(); }
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.shiftKey && (e.key === 'A' || e.key === 'a')) {
+                e.preventDefault();
+                openPasswordModal();
+            }
+        });
+
+        function openAdminPanel() {
+            document.getElementById('adminOverlay').classList.add('active');
+            renderAdminData();
+        }
+        window.closeAdmin = function() { document.getElementById('adminOverlay').classList.remove('active'); };
+        document.getElementById('adminOverlay').addEventListener('click', function(e) {
+            if (e.target === this) window.closeAdmin();
+        });
+
+        function renderAdminData() {
+            var db = getDB();
+            var tbody = document.getElementById('adminTableBody');
+            var today = new Date().toISOString().slice(0, 10);
+            document.getElementById('statTotal').textContent = db.length;
+            document.getElementById('statToday').textContent = db.filter(function(r) { return r.timestamp.slice(0,10) === today; }).length;
+            document.getElementById('statPrivacy').textContent = db.filter(function(r) { return r.consent_privacy || r.consent; }).length;
+            document.getElementById('statComm').textContent = db.filter(function(r) { return r.consent_communication; }).length;
+            tbody.innerHTML = '';
+            db.forEach(function(r, i) {
+                var tr = document.createElement('tr');
+                var dt = new Date(r.timestamp);
+                var fd = dt.toLocaleDateString('pt-BR') + ' ' + dt.toLocaleTimeString('pt-BR');
+                var cp = (r.consent_privacy || r.consent) ? 'Sim' : 'Nao';
+                var cc = r.consent_communication ? 'Sim' : 'Nao';
+                tr.innerHTML = '<td>'+(i+1)+'</td><td>'+escapeHTML(r.name)+'</td><td>'+escapeHTML(r.email)+'</td><td>'+escapeHTML(r.crm)+'</td><td>'+cp+'</td><td>'+cc+'</td><td>'+fd+'</td>';
+                tbody.appendChild(tr);
+            });
+        }
+        window.exportCSV = function() {
+            var db = getDB();
+            if (db.length === 0) { showToast('Nenhum registro para exportar.'); return; }
+            var BOM = '﻿';
+            var headers = ['#','Nome Completo','E-mail','CRM','Consentimento Privacidade','Consentimento Comunicacao','Data/Hora Registro','Interacoes'];
+            var rows = db.map(function(r, i) {
+                var inter = (r.interactions || []).map(function(x) { return x.type + ' (' + x.timestamp + ')'; }).join('; ');
+                var cp = (r.consent_privacy || r.consent) ? 'Sim' : 'Nao';
+                var cc = r.consent_communication ? 'Sim' : 'Nao';
+                return [i+1, '"'+r.name+'"', '"'+r.email+'"', '"'+r.crm+'"', cp, cc, '"'+new Date(r.timestamp).toLocaleString('pt-BR')+'"', '"'+inter+'"'].join(',');
+            });
+            var csv = BOM + headers.join(',') + '\n' + rows.join('\n');
+            var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = 'relatorio_forum_dii_' + new Date().toISOString().slice(0,10) + '.csv';
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('CSV exportado com sucesso!');
+        };
+
+        function escapeHTML(str) {
+            var div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+    })();
+    </script>
+</body>
+</html>
