@@ -57,11 +57,6 @@ export default function EventoPage() {
     .join("")
     .toUpperCase();
 
-  const firstName = user.name
-    .split(" ")
-    .slice(0, /^dra?\.?$/i.test(user.name.split(" ")[0]) ? 2 : 1)
-    .join(" ");
-
   return (
     <main className="min-h-screen" style={{ backgroundColor: "#e2d6d8" }}>
       {/* Navbar */}
@@ -77,8 +72,8 @@ export default function EventoPage() {
           <Image
             src="/logo.png"
             alt="Fórum DII 2026 · Takeda"
-            width={110}
-            height={55}
+            width={75}
+            height={40}
             className="object-contain"
             priority
           />
@@ -116,54 +111,11 @@ export default function EventoPage() {
       </nav>
 
       <div className="max-w-7xl mx-auto px-6 py-6">
-        {/* Welcome banner */}
-        <div className="bg-white rounded-2xl p-5 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm">
-          <div>
-            <h1 className="text-xl font-bold text-gray-800">
-              Bem-vindo(a),{" "}
-              <span style={{ color: "#732762" }}>{firstName}</span>! 👋
-            </h1>
-            <p className="text-sm text-gray-500 mt-0.5">
-              CRM {user.crmNumber}/{user.crmUf} · Cadastrado em{" "}
-              {new Date(user.registeredAt).toLocaleDateString("pt-BR", {
-                day: "2-digit",
-                month: "long",
-                hour: "2-digit",
-                minute: "2-digit",
-              })}
-            </p>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            <span
-              className="tag-badge text-xs border"
-              style={{
-                backgroundColor: "rgba(115,39,98,0.1)",
-                color: "#732762",
-                borderColor: "rgba(115,39,98,0.25)",
-              }}
-            >
-              🎟️ Acesso completo
-            </span>
-            <span className="tag-badge bg-green-50 text-green-600 border border-green-200 text-xs">
-              ● Ao vivo agora
-            </span>
-          </div>
-        </div>
-
         {/* Sli.do */}
         <div className="animate-fade-in">
-          <div className="mb-4">
-            <h2 className="text-lg font-semibold text-gray-800">Interação ao vivo com Sli.do</h2>
-            <p className="text-sm text-gray-500 mt-1">
-              Faça perguntas, vote em enquetes e participe do evento em tempo real.
-              {user.name && (
-                <>
-                  {" "}Você está sendo identificado como{" "}
-                  <strong style={{ color: "#732762" }}>{user.name}</strong> automaticamente.
-                </>
-              )}
-            </p>
-          </div>
+          <p className="text-sm text-gray-500 mb-4">
+            Faça perguntas, vote em enquetes e participe do evento em tempo real.
+          </p>
           <SlidoEmbed user={{ name: user.name, email: user.email }} />
         </div>
       </div>
