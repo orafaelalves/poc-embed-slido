@@ -82,7 +82,7 @@ export default function EventoPage() {
               />
             </div>
             <span className="text-white font-semibold text-sm leading-tight">
-              Fórum Takeda DII 2026
+              Fórum DII Takeda 2026
             </span>
           </div>
 
