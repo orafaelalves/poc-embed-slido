@@ -68,9 +68,8 @@ export function buildSlidoUrl(
 ): string {
   if (!eventCode) return "";
   const base = `https://app.sli.do/event/${eventCode}`;
-  const params = new URLSearchParams();
-  if (user.name) params.set("user_name", user.name);
-  if (user.email) params.set("user_email", user.email);
-  const qs = params.toString();
-  return qs ? `${base}?${qs}` : base;
+  const parts: string[] = [];
+  if (user.name) parts.push(`user_name=${encodeURIComponent(user.name)}`);
+  if (user.email) parts.push(`user_email=${encodeURIComponent(user.email)}`);
+  return parts.length ? `${base}?${parts.join("&")}` : base;
 }
