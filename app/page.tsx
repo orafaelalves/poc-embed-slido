@@ -40,6 +40,7 @@ export default function LandingPage() {
   const [errors, setErrors] = useState<FormErrors>({});
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [showInfoModal, setShowInfoModal] = useState(false);
 
   useEffect(() => {
     const user = getUser();
@@ -277,16 +278,14 @@ export default function LandingPage() {
                     <span className="text-xs text-gray-600 leading-relaxed">
                       Autorizo a coleta e o processamento dos meus dados para
                       personalização de comunicações futuras nos meios de comunicação Takeda.{" "}
-                      <a
-                        href="https://www.takeda.com/pt-br/aviso-de-privacidade/"
-                        target="_blank"
-                        rel="noopener noreferrer"
+                      <button
+                        type="button"
                         className="font-semibold underline"
                         style={{ color: "#732762" }}
-                        onClick={(e) => e.stopPropagation()}
+                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); setShowInfoModal(true); }}
                       >
                         Saiba mais
-                      </a>
+                      </button>
                     </span>
                   </label>
 
@@ -341,6 +340,84 @@ export default function LandingPage() {
           </div>
         </div>
       </div>
+
+      {/* Modal — Saiba mais sobre uso de dados */}
+      {showInfoModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-end lg:items-center justify-center p-0 lg:p-5"
+          style={{ backgroundColor: "rgba(30,18,51,0.80)", backdropFilter: "blur(4px)" }}
+          onClick={() => setShowInfoModal(false)}
+        >
+          <div
+            className="bg-white w-full lg:max-w-xl rounded-t-2xl lg:rounded-2xl overflow-hidden flex flex-col shadow-2xl"
+            style={{ maxHeight: "85dvh" }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div
+              className="px-5 py-4 flex items-center justify-between flex-shrink-0"
+              style={{ background: "linear-gradient(135deg, #732762, #5a1d4d)" }}
+            >
+              <h2 className="text-white font-bold text-base">Uso dos Dados para Comunicação</h2>
+              <button
+                onClick={() => setShowInfoModal(false)}
+                className="text-white w-9 h-9 rounded-full flex items-center justify-center transition-all"
+                style={{ backgroundColor: "rgba(255,255,255,0.15)" }}
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Body */}
+            <div className="overflow-y-auto flex-1 px-5 py-5 text-sm leading-relaxed text-gray-700 space-y-4">
+              <div>
+                <h3 className="font-bold text-sm mb-2" style={{ color: "#5a1d4d" }}>Quais dados serão utilizados?</h3>
+                <ul className="list-disc pl-5 space-y-1 text-gray-600">
+                  <li><strong>Nome completo</strong></li>
+                  <li><strong>Endereço de e-mail</strong></li>
+                  <li><strong>CRM e UF de registro</strong></li>
+                  <li><strong>Dados de interação</strong> (participação em sessões e respostas)</li>
+                </ul>
+              </div>
+
+              <div>
+                <h3 className="font-bold text-sm mb-2" style={{ color: "#5a1d4d" }}>Como seus dados serão utilizados?</h3>
+                <p className="text-gray-600 mb-2">Ao consentir, seus dados poderão ser utilizados para:</p>
+                <ul className="list-disc pl-5 space-y-1 text-gray-600">
+                  <li><strong>Personalização de comunicações</strong> — envio de conteúdos relevantes à sua área de atuação</li>
+                  <li><strong>Convites para eventos futuros</strong> — fóruns, webinários e encontros científicos alinhados ao seu perfil profissional</li>
+                  <li><strong>Recomendações de conteúdo</strong> — materiais, estudos e atualizações sobre terapias e áreas de interesse</li>
+                </ul>
+              </div>
+
+              <div>
+                <h3 className="font-bold text-sm mb-2" style={{ color: "#5a1d4d" }}>Base legal e seus direitos</h3>
+                <p className="text-gray-600">O processamento é realizado em conformidade com a <strong>LGPD (Lei nº 13.709/2018)</strong>, com base no seu consentimento livre e informado.</p>
+              </div>
+
+              <div
+                className="rounded-lg px-4 py-3 text-sm text-gray-700"
+                style={{ backgroundColor: "rgba(115,39,98,0.06)", borderLeft: "3px solid #732762" }}
+              >
+                <strong>Revogação:</strong> Você pode <strong>revogar este consentimento a qualquer momento</strong>, sem prejuízo à sua participação no evento, entrando em contato com a equipe organizadora ou através dos canais de comunicação da Takeda.
+              </div>
+
+              <p className="text-gray-500 text-xs">Este consentimento é <strong>opcional</strong> e não impede o acesso ao evento caso não seja concedido.</p>
+            </div>
+
+            {/* Footer */}
+            <div className="px-5 py-4 border-t border-gray-100 flex-shrink-0 text-center">
+              <button
+                onClick={() => setShowInfoModal(false)}
+                className="px-10 py-3 text-white font-bold rounded-xl transition-all"
+                style={{ background: "linear-gradient(to right, #732762, #5a1d4d)" }}
+              >
+                Entendi
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
