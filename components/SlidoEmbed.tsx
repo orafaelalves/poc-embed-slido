@@ -16,22 +16,28 @@ export default function SlidoEmbed({ user }: SlidoEmbedProps) {
   const slidoUrl = buildSlidoUrl(SLIDO_EVENT_CODE, user);
 
   return (
-    <div className="glass-card overflow-hidden">
-      <div className="px-5 py-3 border-b border-white/10 flex items-center justify-between">
+    <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+      <div className="px-5 py-3 border-b border-gray-100 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-          <span className="text-sm font-medium">Sli.do ao vivo</span>
+          <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+          <span className="text-sm font-medium text-gray-700">Sli.do ao vivo</span>
         </div>
-        <span className="tag-badge text-xs border" style={{ backgroundColor: "rgba(115,39,98,0.2)", color: "#d4a0c4", borderColor: "rgba(115,39,98,0.3)" }}>
+        <span
+          className="tag-badge text-xs border"
+          style={{ backgroundColor: "rgba(115,39,98,0.1)", color: "#732762", borderColor: "rgba(115,39,98,0.25)" }}
+        >
           Identificado como: {user.name}
         </span>
       </div>
       <div className="relative" style={{ height: "640px" }}>
         {iframeLoading && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/20">
+          <div className="absolute inset-0 flex items-center justify-center bg-gray-50">
             <div className="text-center">
-              <div className="w-10 h-10 border-2 border-t-transparent rounded-full animate-spin mx-auto mb-3" style={{ borderColor: "#732762", borderTopColor: "transparent" }} />
-              <p className="text-sm text-white/50">Carregando sli.do...</p>
+              <div
+                className="w-10 h-10 border-2 border-t-transparent rounded-full animate-spin mx-auto mb-3"
+                style={{ borderColor: "#732762", borderTopColor: "transparent" }}
+              />
+              <p className="text-sm text-gray-400">Carregando sli.do...</p>
             </div>
           </div>
         )}
@@ -46,13 +52,13 @@ export default function SlidoEmbed({ user }: SlidoEmbedProps) {
           className="w-full h-full"
         />
       </div>
-      <div className="px-5 py-3 border-t border-white/10 flex items-center justify-between gap-3">
-        <p className="text-xs text-white/40">
+      <div className="px-5 py-3 border-t border-gray-100 flex items-center justify-between gap-3">
+        <p className="text-xs text-gray-400">
           Problemas com o embed? Acesse o sli.do diretamente:
         </p>
         <a
           href={slidoUrl}
-          className="btn-secondary text-xs whitespace-nowrap inline-flex items-center gap-1.5"
+          className="text-xs whitespace-nowrap inline-flex items-center gap-1.5 border border-gray-200 text-gray-600 hover:bg-gray-50 px-3 py-1.5 rounded-lg transition-all"
         >
           Entrar no sli.do
           <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

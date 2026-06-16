@@ -2,20 +2,22 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import dynamic from "next/dynamic";
 import { getUser, clearUser } from "@/lib/storage";
 import type { EventUser } from "@/lib/storage";
 
-// Dynamic import to avoid SSR issues with localStorage-dependent component
 const SlidoEmbed = dynamic(() => import("@/components/SlidoEmbed"), {
   ssr: false,
   loading: () => (
-    <div className="glass-card p-12 text-center">
-      <div className="w-8 h-8 border-2 border-t-transparent rounded-full animate-spin mx-auto" style={{ borderColor: "#732762", borderTopColor: "transparent" }} />
+    <div className="bg-white rounded-2xl shadow-lg p-12 text-center">
+      <div
+        className="w-8 h-8 border-2 border-t-transparent rounded-full animate-spin mx-auto"
+        style={{ borderColor: "#732762", borderTopColor: "transparent" }}
+      />
     </div>
   ),
 });
-
 
 export default function EventoPage() {
   const router = useRouter();
@@ -39,8 +41,11 @@ export default function EventoPage() {
 
   if (!ready || !user) {
     return (
-      <div className="min-h-screen bg-hero-gradient flex items-center justify-center">
-        <div className="w-10 h-10 border-2 border-t-transparent rounded-full animate-spin" style={{ borderColor: "#732762", borderTopColor: "transparent" }} />
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: "#e2d6d8" }}>
+        <div
+          className="w-10 h-10 border-2 border-t-transparent rounded-full animate-spin"
+          style={{ borderColor: "#732762", borderTopColor: "transparent" }}
+        />
       </div>
     );
   }
@@ -52,42 +57,54 @@ export default function EventoPage() {
     .join("")
     .toUpperCase();
 
+  const firstName = user.name
+    .split(" ")
+    .slice(0, /^dra?\.?$/i.test(user.name.split(" ")[0]) ? 2 : 1)
+    .join(" ");
+
   return (
-    <main className="min-h-screen bg-hero-gradient text-white">
+    <main className="min-h-screen" style={{ backgroundColor: "#e2d6d8" }}>
       {/* Navbar */}
-      <nav className="sticky top-0 z-50 border-b border-white/10 bg-black/30 backdrop-blur-md">
+      <nav
+        className="sticky top-0 z-50"
+        style={{
+          backgroundImage: "url(/bg-lateral.jpg)",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      >
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold flex-shrink-0 text-white"
-              style={{ background: "linear-gradient(135deg, #732762, #5a1d4d)" }}>
-              FD
-            </div>
-            <div className="hidden sm:block">
-              <p className="text-sm font-semibold leading-none">Fórum DII 2026</p>
-              <p className="text-xs text-white/40 mt-0.5">Takeda</p>
-            </div>
-          </div>
+          <Image
+            src="/logo.png"
+            alt="Fórum DII 2026 · Takeda"
+            width={110}
+            height={55}
+            className="object-contain"
+            priority
+          />
 
           <div className="flex items-center gap-2">
-            <div className="flex items-center gap-2 glass-card px-3 py-1.5">
-              <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 text-white"
-                style={{ background: "linear-gradient(135deg, #732762, #a04590)" }}>
+            <div className="flex items-center gap-2 bg-white/15 backdrop-blur-sm border border-white/20 rounded-xl px-3 py-1.5">
+              <div
+                className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 text-white"
+                style={{ background: "linear-gradient(135deg, #732762, #a04590)" }}
+              >
                 {initials}
               </div>
               <div className="hidden sm:block text-sm">
-                <p className="font-medium leading-none">{user.name}</p>
-                <p className="text-white/40 text-xs mt-0.5">
+                <p className="font-medium leading-none text-white">{user.name}</p>
+                <p className="text-white/60 text-xs mt-0.5">
                   CRM {user.crmNumber}/{user.crmUf}
                 </p>
               </div>
-              <span className="tag-badge bg-green-500/20 text-green-400 border border-green-500/30 text-xs hidden sm:inline-flex">
+              <span className="tag-badge bg-green-500/20 text-green-300 border border-green-500/30 text-xs hidden sm:inline-flex">
                 Credenciado
               </span>
             </div>
             <button
               onClick={handleLogout}
               title="Sair"
-              className="btn-secondary p-2"
+              className="bg-white/15 hover:bg-white/25 border border-white/20 text-white p-2 rounded-lg transition-all"
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
@@ -98,21 +115,15 @@ export default function EventoPage() {
         </div>
       </nav>
 
-      <div className="max-w-7xl mx-auto px-6 py-8">
+      <div className="max-w-7xl mx-auto px-6 py-6">
         {/* Welcome banner */}
-        <div className="glass-card p-5 mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="bg-white rounded-2xl p-5 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm">
           <div>
-            <h1 className="text-xl font-bold">
+            <h1 className="text-xl font-bold text-gray-800">
               Bem-vindo(a),{" "}
-              <span className="bg-clip-text text-transparent" style={{ backgroundImage: "linear-gradient(to right, #d4a0c4, #f4a0c4)" }}>
-                {user.name
-                  .split(" ")
-                  .slice(0, /^dra?\.?$/i.test(user.name.split(" ")[0]) ? 2 : 1)
-                  .join(" ")}
-              </span>
-              ! 👋
+              <span style={{ color: "#732762" }}>{firstName}</span>! 👋
             </h1>
-            <p className="text-sm text-white/50 mt-0.5">
+            <p className="text-sm text-gray-500 mt-0.5">
               CRM {user.crmNumber}/{user.crmUf} · Cadastrado em{" "}
               {new Date(user.registeredAt).toLocaleDateString("pt-BR", {
                 day: "2-digit",
@@ -123,25 +134,32 @@ export default function EventoPage() {
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
-            <span className="tag-badge text-xs border" style={{ backgroundColor: "rgba(115,39,98,0.2)", color: "#d4a0c4", borderColor: "rgba(115,39,98,0.3)" }}>
+            <span
+              className="tag-badge text-xs border"
+              style={{
+                backgroundColor: "rgba(115,39,98,0.1)",
+                color: "#732762",
+                borderColor: "rgba(115,39,98,0.25)",
+              }}
+            >
               🎟️ Acesso completo
             </span>
-            <span className="tag-badge bg-green-500/20 text-green-400 border border-green-500/30 text-xs">
+            <span className="tag-badge bg-green-50 text-green-600 border border-green-200 text-xs">
               ● Ao vivo agora
             </span>
           </div>
         </div>
 
+        {/* Sli.do */}
         <div className="animate-fade-in">
           <div className="mb-4">
-            <h2 className="text-lg font-semibold">Interação ao vivo com Sli.do</h2>
-            <p className="text-sm text-white/50 mt-1">
+            <h2 className="text-lg font-semibold text-gray-800">Interação ao vivo com Sli.do</h2>
+            <p className="text-sm text-gray-500 mt-1">
               Faça perguntas, vote em enquetes e participe do evento em tempo real.
               {user.name && (
                 <>
-                  {" "}
-                  Você está sendo identificado como{" "}
-                  <strong className="text-white/80">{user.name}</strong> automaticamente.
+                  {" "}Você está sendo identificado como{" "}
+                  <strong style={{ color: "#732762" }}>{user.name}</strong> automaticamente.
                 </>
               )}
             </p>
