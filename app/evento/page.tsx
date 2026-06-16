@@ -16,26 +16,12 @@ const SlidoEmbed = dynamic(() => import("@/components/SlidoEmbed"), {
   ),
 });
 
-const AGENDA = [
-  { time: "09:00", title: "Abertura e boas-vindas", speaker: "Fórum DII 2026 · Takeda", type: "keynote" },
-  { time: "09:30", title: "Sessão interativa ao vivo", speaker: "", type: "palestra" },
-  { time: "11:30", title: "Intervalo", speaker: "", type: "break" },
-  { time: "14:00", title: "Sessão interativa — tarde", speaker: "", type: "palestra" },
-  { time: "15:30", title: "Encerramento", speaker: "", type: "keynote" },
-];
-
-const TYPE_STYLES: Record<string, string> = {
-  keynote: "bg-purple-500/20 text-purple-300 border-purple-500/30",
-  palestra: "bg-blue-500/20 text-blue-300 border-blue-500/30",
-  painel: "bg-amber-500/20 text-amber-300 border-amber-500/30",
-  break: "bg-white/10 text-white/40 border-white/10",
-};
 
 export default function EventoPage() {
   const router = useRouter();
   const [user, setUser] = useState<EventUser | null>(null);
   const [ready, setReady] = useState(false);
-  const [activeTab, setActiveTab] = useState<"slido" | "agenda">("slido");
+  const [activeTab, setActiveTab] = useState<"slido">("slido");
 
   useEffect(() => {
     const saved = getUser();
@@ -145,73 +131,22 @@ export default function EventoPage() {
           </div>
         </div>
 
-        {/* Tab navigation */}
-        <div className="flex gap-1 glass-card p-1 w-fit mb-6">
-          {(["slido", "agenda"] as const).map((tab) => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`px-5 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                activeTab === tab
-                  ? "bg-purple-600 text-white shadow-lg shadow-purple-500/20"
-                  : "text-white/50 hover:text-white/80"
-              }`}
-            >
-              {tab === "slido" ? "💬 Interação ao vivo" : "📅 Programação"}
-            </button>
-          ))}
+        <div className="animate-fade-in">
+          <div className="mb-4">
+            <h2 className="text-lg font-semibold">Interação ao vivo com Sli.do</h2>
+            <p className="text-sm text-white/50 mt-1">
+              Faça perguntas, vote em enquetes e participe do evento em tempo real.
+              {user.name && (
+                <>
+                  {" "}
+                  Você está sendo identificado como{" "}
+                  <strong className="text-white/80">{user.name}</strong> automaticamente.
+                </>
+              )}
+            </p>
+          </div>
+          <SlidoEmbed user={{ name: user.name, email: user.email }} />
         </div>
-
-        {/* Tab content */}
-        {activeTab === "slido" ? (
-          <div className="animate-fade-in">
-            <div className="mb-4">
-              <h2 className="text-lg font-semibold">Interação ao vivo com Sli.do</h2>
-              <p className="text-sm text-white/50 mt-1">
-                Faça perguntas, vote em enquetes e participe do evento em tempo real.
-                {user.name && (
-                  <>
-                    {" "}
-                    Você está sendo identificado como{" "}
-                    <strong className="text-white/80">{user.name}</strong> automaticamente.
-                  </>
-                )}
-              </p>
-            </div>
-            <SlidoEmbed user={{ name: user.name, email: user.email }} />
-          </div>
-        ) : (
-          <div className="animate-fade-in">
-            <h2 className="text-lg font-semibold mb-4">Programação do dia</h2>
-            <div className="space-y-3">
-              {AGENDA.map((item, i) => (
-                <div
-                  key={i}
-                  className={`glass-card p-4 flex items-start gap-4 ${
-                    item.type === "break" ? "opacity-50" : ""
-                  }`}
-                >
-                  <div className="text-sm font-mono text-white/40 w-12 flex-shrink-0 pt-0.5">
-                    {item.time}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between gap-2">
-                      <h3 className="font-medium text-sm">{item.title}</h3>
-                      <span
-                        className={`tag-badge border flex-shrink-0 text-xs ${TYPE_STYLES[item.type]}`}
-                      >
-                        {item.type}
-                      </span>
-                    </div>
-                    {item.speaker && (
-                      <p className="text-xs text-white/40 mt-1">{item.speaker}</p>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
     </main>
   );

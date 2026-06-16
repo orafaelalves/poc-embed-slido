@@ -4,7 +4,7 @@ import { useState } from "react";
 import { buildSlidoUrl } from "@/lib/storage";
 import type { EventUser } from "@/lib/storage";
 
-const SLIDO_EVENT_CODE = "r3vKaTdQ6RgCqjee3aLtbN";
+const SLIDO_EVENT_CODE = "8m3EQAAuGQzfuvXTHP8qKF";
 
 interface SlidoEmbedProps {
   user: Pick<EventUser, "name" | "email">;
