@@ -21,7 +21,6 @@ export default function EventoPage() {
   const router = useRouter();
   const [user, setUser] = useState<EventUser | null>(null);
   const [ready, setReady] = useState(false);
-  const [activeTab, setActiveTab] = useState<"slido">("slido");
 
   useEffect(() => {
     const saved = getUser();
