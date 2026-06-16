@@ -55,10 +55,8 @@ export default function SlidoEmbed({ user }: SlidoEmbedProps) {
               <strong className="text-gray-700">{user.name}</strong> ({user.email})
             </p>
           </div>
-          <a
-            href={slidoUrl}
-            target="_blank"
-            rel="noopener noreferrer"
+          <button
+            onClick={() => { window.location.href = slidoUrl; }}
             className="w-full text-white font-semibold py-3 px-6 rounded-xl flex items-center justify-center gap-2 transition-all"
             style={{ background: "linear-gradient(to right, #732762, #5a1d4d)" }}
           >
@@ -67,9 +65,9 @@ export default function SlidoEmbed({ user }: SlidoEmbedProps) {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                 d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
             </svg>
-          </a>
+          </button>
           <p className="text-xs text-gray-400">
-            O link já inclui seu nome e e-mail para identificação automática.
+            Você será redirecionado para o Sli.do com seu e-mail ({user.email}) já preenchido.
           </p>
         </div>
       </div>
