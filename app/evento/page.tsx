@@ -69,14 +69,22 @@ export default function EventoPage() {
         }}
       >
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between gap-4">
-          <Image
-            src="/logo.png"
-            alt="Fórum DII 2026 · Takeda"
-            width={75}
-            height={40}
-            className="object-contain"
-            priority
-          />
+          <div className="flex items-center gap-3">
+            <div className="bg-white rounded-xl px-2 py-1.5 flex items-center justify-center">
+              <Image
+                src="/logo.png"
+                alt="Fórum DII 2026 · Takeda"
+                width={75}
+                height={40}
+                className="object-contain"
+                style={{ height: "50px" }}
+                priority
+              />
+            </div>
+            <span className="text-white font-semibold text-sm leading-tight">
+              Fórum Takeda DII 2026
+            </span>
+          </div>
 
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-2 bg-white/15 backdrop-blur-sm border border-white/20 rounded-xl px-3 py-1.5">
