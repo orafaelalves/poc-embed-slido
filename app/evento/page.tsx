@@ -11,7 +11,7 @@ const SlidoEmbed = dynamic(() => import("@/components/SlidoEmbed"), {
   ssr: false,
   loading: () => (
     <div className="glass-card p-12 text-center">
-      <div className="w-8 h-8 border-2 border-purple-500 border-t-transparent rounded-full animate-spin mx-auto" />
+      <div className="w-8 h-8 border-2 border-t-transparent rounded-full animate-spin mx-auto" style={{ borderColor: "#732762", borderTopColor: "transparent" }} />
     </div>
   ),
 });
@@ -40,7 +40,7 @@ export default function EventoPage() {
   if (!ready || !user) {
     return (
       <div className="min-h-screen bg-hero-gradient flex items-center justify-center">
-        <div className="w-10 h-10 border-2 border-purple-500 border-t-transparent rounded-full animate-spin" />
+        <div className="w-10 h-10 border-2 border-t-transparent rounded-full animate-spin" style={{ borderColor: "#732762", borderTopColor: "transparent" }} />
       </div>
     );
   }
@@ -58,7 +58,8 @@ export default function EventoPage() {
       <nav className="sticky top-0 z-50 border-b border-white/10 bg-black/30 backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-purple-700 rounded-lg flex items-center justify-center text-sm font-bold flex-shrink-0">
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold flex-shrink-0 text-white"
+              style={{ background: "linear-gradient(135deg, #732762, #5a1d4d)" }}>
               FD
             </div>
             <div className="hidden sm:block">
@@ -69,7 +70,8 @@ export default function EventoPage() {
 
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-2 glass-card px-3 py-1.5">
-              <div className="w-7 h-7 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-xs font-bold flex-shrink-0">
+              <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 text-white"
+                style={{ background: "linear-gradient(135deg, #732762, #a04590)" }}>
                 {initials}
               </div>
               <div className="hidden sm:block text-sm">
@@ -102,7 +104,7 @@ export default function EventoPage() {
           <div>
             <h1 className="text-xl font-bold">
               Bem-vindo(a),{" "}
-              <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+              <span className="bg-clip-text text-transparent" style={{ backgroundImage: "linear-gradient(to right, #d4a0c4, #f4a0c4)" }}>
                 {user.name
                   .split(" ")
                   .slice(0, /^dra?\.?$/i.test(user.name.split(" ")[0]) ? 2 : 1)
@@ -121,7 +123,7 @@ export default function EventoPage() {
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
-            <span className="tag-badge bg-purple-500/20 text-purple-300 border border-purple-500/30 text-xs">
+            <span className="tag-badge text-xs border" style={{ backgroundColor: "rgba(115,39,98,0.2)", color: "#d4a0c4", borderColor: "rgba(115,39,98,0.3)" }}>
               🎟️ Acesso completo
             </span>
             <span className="tag-badge bg-green-500/20 text-green-400 border border-green-500/30 text-xs">

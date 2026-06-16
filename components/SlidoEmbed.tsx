@@ -22,7 +22,7 @@ export default function SlidoEmbed({ user }: SlidoEmbedProps) {
           <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
           <span className="text-sm font-medium">Sli.do ao vivo</span>
         </div>
-        <span className="tag-badge bg-purple-500/20 text-purple-300 border border-purple-500/30 text-xs">
+        <span className="tag-badge text-xs border" style={{ backgroundColor: "rgba(115,39,98,0.2)", color: "#d4a0c4", borderColor: "rgba(115,39,98,0.3)" }}>
           Identificado como: {user.name}
         </span>
       </div>
@@ -30,7 +30,7 @@ export default function SlidoEmbed({ user }: SlidoEmbedProps) {
         {iframeLoading && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/20">
             <div className="text-center">
-              <div className="w-10 h-10 border-2 border-purple-500 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+              <div className="w-10 h-10 border-2 border-t-transparent rounded-full animate-spin mx-auto mb-3" style={{ borderColor: "#732762", borderTopColor: "transparent" }} />
               <p className="text-sm text-white/50">Carregando sli.do...</p>
             </div>
           </div>

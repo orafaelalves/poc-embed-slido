@@ -102,11 +102,16 @@ export default function LandingPage() {
     }
   };
 
+  const inputClass = (hasError?: boolean) =>
+    `w-full bg-gray-50 border rounded-xl px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400
+     focus:outline-none transition-all ${hasError ? "border-red-400" : "border-gray-200"}`;
+
   return (
-    <main className="min-h-screen flex" style={{ backgroundColor: "#e2d6d8" }}>
-      {/* Left panel */}
-      <div
-        className="hidden lg:flex w-[45%] flex-col items-center justify-center"
+    <main className="min-h-screen flex flex-col lg:flex-row" style={{ backgroundColor: "#e2d6d8" }}>
+
+      {/* Mobile / tablet portrait — header */}
+      <header
+        className="lg:hidden flex items-center justify-center py-6"
         style={{
           backgroundImage: "url(/bg-lateral.jpg)",
           backgroundSize: "cover",
@@ -116,27 +121,34 @@ export default function LandingPage() {
         <Image
           src="/logo.png"
           alt="Fórum DII 2026 · Takeda"
-          width={220}
-          height={120}
+          width={130}
+          height={65}
+          className="object-contain"
+          priority
+        />
+      </header>
+
+      {/* Desktop — left panel */}
+      <div
+        className="hidden lg:flex w-[38%] flex-col items-center justify-center"
+        style={{
+          backgroundImage: "url(/bg-lateral.jpg)",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      >
+        <Image
+          src="/logo.png"
+          alt="Fórum DII 2026 · Takeda"
+          width={280}
+          height={150}
           className="object-contain"
           priority
         />
       </div>
 
-      {/* Right panel */}
-      <div className="flex-1 flex flex-col items-center justify-center px-6 py-10">
-        {/* Mobile logo */}
-        <div className="lg:hidden mb-6">
-          <Image
-            src="/logo.png"
-            alt="Fórum DII 2026 · Takeda"
-            width={160}
-            height={80}
-            className="object-contain"
-            priority
-          />
-        </div>
-
+      {/* Right panel — form */}
+      <div className="flex-1 flex items-center justify-center px-6 py-8 lg:py-10">
         <div className="w-full max-w-md">
           <div className="bg-white rounded-2xl p-7 shadow-lg">
             {!submitted ? (
@@ -152,7 +164,7 @@ export default function LandingPage() {
                   {/* Nome */}
                   <div>
                     <label className="block text-xs font-medium text-gray-600 mb-1">
-                      Nome Completo <span className="text-purple-600">*</span>
+                      Nome Completo <span style={{ color: "#732762" }}>*</span>
                     </label>
                     <input
                       type="text"
@@ -161,9 +173,8 @@ export default function LandingPage() {
                       onChange={handleChange}
                       placeholder="Ex.: Dr. João Silva"
                       autoComplete="name"
-                      className={`w-full bg-gray-50 border rounded-xl px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400
-                        focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-400 transition-all
-                        ${errors.name ? "border-red-400" : "border-gray-200"}`}
+                      className={inputClass(!!errors.name)}
+                      style={errors.name ? {} : undefined}
                     />
                     {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
                   </div>
@@ -171,7 +182,7 @@ export default function LandingPage() {
                   {/* E-mail */}
                   <div>
                     <label className="block text-xs font-medium text-gray-600 mb-1">
-                      E-mail <span className="text-purple-600">*</span>
+                      E-mail <span style={{ color: "#732762" }}>*</span>
                     </label>
                     <input
                       type="email"
@@ -180,9 +191,7 @@ export default function LandingPage() {
                       onChange={handleChange}
                       placeholder="seu.email@exemplo.com"
                       autoComplete="email"
-                      className={`w-full bg-gray-50 border rounded-xl px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400
-                        focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-400 transition-all
-                        ${errors.email ? "border-red-400" : "border-gray-200"}`}
+                      className={inputClass(!!errors.email)}
                     />
                     {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
                   </div>
@@ -190,7 +199,7 @@ export default function LandingPage() {
                   {/* CRM */}
                   <div>
                     <label className="block text-xs font-medium text-gray-600 mb-1">
-                      CRM <span className="text-purple-600">*</span>
+                      CRM <span style={{ color: "#732762" }}>*</span>
                     </label>
                     <div className="flex gap-3">
                       <select
@@ -198,7 +207,7 @@ export default function LandingPage() {
                         value={form.crmUf}
                         onChange={handleChange}
                         className={`bg-gray-50 border rounded-xl px-3 py-2.5 text-sm text-gray-900 w-24
-                          focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-400 transition-all
+                          focus:outline-none transition-all
                           ${errors.crm && !form.crmUf ? "border-red-400" : "border-gray-200"}`}
                       >
                         <option value="">UF</option>
@@ -215,7 +224,7 @@ export default function LandingPage() {
                         inputMode="numeric"
                         maxLength={7}
                         className={`flex-1 bg-gray-50 border rounded-xl px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400
-                          focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-400 transition-all
+                          focus:outline-none transition-all
                           ${errors.crm && !form.crmNumber ? "border-red-400" : "border-gray-200"}`}
                       />
                     </div>
@@ -232,7 +241,8 @@ export default function LandingPage() {
                       name="privacyConsent"
                       checked={form.privacyConsent}
                       onChange={handleChange}
-                      className="mt-0.5 w-4 h-4 accent-purple-600 flex-shrink-0"
+                      className="mt-0.5 w-4 h-4 flex-shrink-0"
+                      style={{ accentColor: "#732762" }}
                     />
                     <span className="text-xs text-gray-600 leading-relaxed">
                       Declaro que li e concordo com a{" "}
@@ -240,13 +250,14 @@ export default function LandingPage() {
                         href="https://www.takeda.com/pt-br/aviso-de-privacidade/"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="font-semibold text-purple-600 underline"
+                        className="font-semibold underline"
+                        style={{ color: "#732762" }}
                         onClick={(e) => e.stopPropagation()}
                       >
                         Política de Privacidade da Takeda
                       </a>{" "}
                       e os termos de uso deste evento.{" "}
-                      <span className="text-purple-600">*</span>
+                      <span style={{ color: "#732762" }}>*</span>
                     </span>
                   </label>
                   {errors.privacyConsent && (
@@ -260,7 +271,8 @@ export default function LandingPage() {
                       name="commsConsent"
                       checked={form.commsConsent}
                       onChange={handleChange}
-                      className="mt-0.5 w-4 h-4 accent-purple-600 flex-shrink-0"
+                      className="mt-0.5 w-4 h-4 flex-shrink-0"
+                      style={{ accentColor: "#732762" }}
                     />
                     <span className="text-xs text-gray-600 leading-relaxed">
                       Autorizo a coleta e o processamento dos meus dados para
@@ -269,7 +281,8 @@ export default function LandingPage() {
                         href="https://www.takeda.com/pt-br/aviso-de-privacidade/"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="font-semibold text-purple-600 underline"
+                        className="font-semibold underline"
+                        style={{ color: "#732762" }}
                         onClick={(e) => e.stopPropagation()}
                       >
                         Saiba mais
@@ -283,11 +296,16 @@ export default function LandingPage() {
                     <button
                       type="submit"
                       disabled={loading}
-                      className="w-full bg-gradient-to-r from-purple-600 to-purple-800 text-white font-semibold
-                        py-3 px-6 rounded-xl transition-all duration-200
-                        hover:from-purple-500 hover:to-purple-700 hover:shadow-lg hover:shadow-purple-500/30
+                      className="w-full text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200
                         active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed
                         flex items-center justify-center gap-2"
+                      style={{ background: "linear-gradient(to right, #732762, #5a1d4d)" }}
+                      onMouseEnter={(e) => {
+                        if (!loading) (e.currentTarget as HTMLButtonElement).style.background = "linear-gradient(to right, #8f3578, #732762)";
+                      }}
+                      onMouseLeave={(e) => {
+                        (e.currentTarget as HTMLButtonElement).style.background = "linear-gradient(to right, #732762, #5a1d4d)";
+                      }}
                     >
                       {loading ? (
                         <>
