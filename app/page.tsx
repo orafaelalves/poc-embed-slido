@@ -1,9 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { saveUser, saveUserToSupabase, getUser } from "@/lib/storage";
+import { saveUser, saveUserToSupabase, getUser, buildSlidoUrl } from "@/lib/storage";
+
+const SLIDO_EVENT_CODE = "8m3EQAAuGQzfuvXTHP8qKF";
 
 interface FormData {
   name: string;
@@ -28,7 +29,6 @@ const UFS = [
 ];
 
 export default function LandingPage() {
-  const router = useRouter();
   const [form, setForm] = useState<FormData>({
     name: "",
     email: "",
@@ -39,13 +39,12 @@ export default function LandingPage() {
   });
   const [errors, setErrors] = useState<FormErrors>({});
   const [loading, setLoading] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
   const [showInfoModal, setShowInfoModal] = useState(false);
 
   useEffect(() => {
     const user = getUser();
-    if (user) router.replace("/evento");
-  }, [router]);
+    if (user) window.location.href = buildSlidoUrl(SLIDO_EVENT_CODE, user);
+  }, []);
 
   const validate = (): boolean => {
     const newErrors: FormErrors = {};
@@ -84,9 +83,7 @@ export default function LandingPage() {
       ...userData,
       registeredAt: new Date().toISOString(),
     });
-    setSubmitted(true);
-    await new Promise((r) => setTimeout(r, 600));
-    router.push("/evento");
+    window.location.href = buildSlidoUrl(SLIDO_EVENT_CODE, userData);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -109,9 +106,7 @@ export default function LandingPage() {
 
   const formContent = (
     <>
-      {!submitted ? (
-        <>
-          <div className="mb-4">
+      <div className="mb-4">
             <h2 className="text-lg font-bold text-gray-800">Credenciamento</h2>
             <p className="text-gray-500 text-xs mt-0.5">
               Preencha seus dados para participar da sessão interativa
@@ -270,18 +265,6 @@ export default function LandingPage() {
               </button>
             </div>
           </form>
-        </>
-      ) : (
-        <div className="text-center py-8">
-          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg className="w-8 h-8 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-            </svg>
-          </div>
-          <h3 className="text-xl font-bold text-gray-800 mb-2">Vaga confirmada!</h3>
-          <p className="text-gray-500 text-sm">Redirecionando para o evento...</p>
-        </div>
-      )}
     </>
   );
 
